@@ -346,16 +346,16 @@ nav {
 
 
     .intro__card:nth-child(1) div {
-        background-image: url("images/intro-1-bg.png");
+        background-image: url("/static/img/intro-1-bg.png");
     }
 
     .intro__card:nth-child(2) div {
-        background-image: url("images/intro-2-bg.png");
+        background-image: url("/static/img/intro-2-bg.png");
     }
 
 
     .intro__card:nth-child(3) div {
-        background-image: url("images/intro-1-bg.png");
+        background-image: url("/static/img/intro-1-bg.png");
     }
 .intro__card div img {
   width: unset;
