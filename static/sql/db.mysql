@@ -1,0 +1,142 @@
+CREATE DATABASE Prototipos;
+Go
+Create table Administradores(
+Id_administrador int primary key identity not null,
+Contraseña varchar(24) not null,
+nombre varchar(50) not null,
+Edad int not null,
+telefono bigint not null,
+email varchar(35) not null
+);
+
+CREATE TABLE Discapacidad(
+Id_Discapacidad int  primary key identity not null,
+Categoria varchar(30) not null,
+Nombre varchar(50) not null,
+Descripcion varchar(250) not null
+);
+
+CREATE TABLE Solicitantes (
+    Id_Solicitante int primary key identity not null,
+    Nombre varchar(50) not null,
+	Contraseña varbinary(255) not null,
+    Edad int not null,
+    Direccion varchar(70) not null,
+    Telefono bigint not null,
+    Email varchar(35) not null,
+    CV varchar(20) not null,
+    Contacto_Emergencia bigint not null,
+    Id_Discapacidad int not null,
+    constraint fk_Id_Discapacidad foreign key (Id_Discapacidad) references Discapacidad(Id_Discapacidad)
+);
+
+
+CREATE TABLE Empresas(
+Id_Empresa int primary key identity not null ,
+Contraseña varchar(24) not null,
+Nombre varchar(50) not null,
+Direccion varchar (70) not null,
+Email varchar(35) not null,
+Telefono bigint not null
+);
+
+CREATE TABLE Vacantes(
+Id_Vacante int primary key identity not null,
+Nombre_Puesto varchar(30) not null,
+Descripcion varchar(250) not null,
+Numero_Puestos int not null,
+Id_Empresa int not null,
+Id_Discapacidad int not null,
+Id_Solicitante int,
+Constraint fkv_Id_Empresa foreign key (Id_Empresa) references Empresas(Id_Empresa),
+Constraint fkv_Id_Discapacidad foreign key (Id_Discapacidad) references Discapacidad(Id_Discapacidad),
+Constraint fkv_Id_Solicitante foreign key (Id_Solicitante) references Solicitantes(Id_Solicitante)
+);
+
+CREATE TABLE Registros(
+Id_Registro INT IDENTITY PRIMARY KEY NOT NULL,
+Id_Vacante INT,
+Id_Solicitante INT,
+Fecha DATETIME,
+CONSTRAINT fkr_Id_Vacante FOREIGN KEY (Id_Vacante)REFERENCES Vacantes(Id_Vacante),
+CONSTRAINT fkr_Id_Solicitante FOREIGN KEY (Id_Solicitante) REFERENCES Solicitantes(Id_Solicitante)
+);
+
+CREATE TABLE Videos(
+Id_Vídeo INT IDENTITY PRIMARY KEY NOT NULL,
+Titulo  VARCHAR(50) NOT NULL,
+Descripcion VARCHAR(250) NOT NULL,
+Link VARCHAR(100) NOT NULL,
+Id_Empresa int
+CONSTRAINT fkvid_Id_Empresa FOREIGN KEY (Id_Empresa) REFERENCES Empresas(Id_Empresa)
+);
+
+CREATE TABLE Aprobados(
+Id_Aprobado INT IDENTITY PRIMARY KEY NOT NULL,
+Id_Vacante INT NOT NULL,
+Id_Solicitante INT NOT NULL,
+CONSTRAINT fka_Id_Vacante FOREIGN KEY (Id_Vacante) REFERENCES  Vacantes(Id_Vacante),
+CONSTRAINT fka_Id_Solicitante FOREIGN KEY (Id_Solicitante) REFERENCES Solicitantes(Id_Solicitante)
+);
+
+GO
+CREATE PROCEDURE Registro_Solicitantes
+@Nombre VARCHAR(50),
+@Contraseña varchar(30),  
+@Edad int, 
+@Direccion VARCHAR(70), 
+@Telefono bigint,
+@Email varchar(35),
+@CV varchar(20),
+@Contacto_Emergencia bigint,
+@Id_Discapacidad int
+AS
+BEGIN
+	INSERT INTO Solicitantes(Nombre, Contraseña, Edad, Direccion, Telefono, Email, CV, Contacto_Emergencia, Id_Discapacidad)
+	Values (@Nombre,ENCRYPTBYPASSPHRASE('Pecsi', @Contraseña), @Edad, @Direccion, @Telefono, @Email, @CV, @Contacto_Emergencia, @Id_Discapacidad);
+END
+GO
+
+GO
+CREATE PROCEDURE Busqueda_Solicitantes
+@Id_Soli int
+AS
+BEGIN 
+	SELECT Nombre, Edad, Direccion, Telefono, Email, Contacto_Emergencia  FROM solicitantes WHERE Id_Solicitante = @Id_Soli;
+END
+GO
+
+GO
+CREATE PROCEDURE Inicio_Sesion
+@Nombre varchar(50),
+@Contraseña varchar(24)
+AS 
+BEGIN
+	SELECT Id_Solicitante FROM Solicitantes WHERE Nombre=@Nombre
+	AND DECRYPTBYPASSPHRASE('Pecsi', Contraseña) = @Contraseña;
+END
+GO
+
+INSERT INTO Discapacidad(Categoria, Nombre, Descripcion) VALUES ('Física o Motora', 'Parálisis', 'Pérdida completa o parcial de la capacidad de movimiento de una o más partes del cuerpo debido a daño en el sistema nervioso o muscular.'),
+																('Física o Motora','Amputaciones','Pérdida de una extremidad o parte del cuerpo, que afecta la movilidad y el uso de prótesis o adaptaciones.'),
+																('Física o Motora','Distrofias musculares','Trastornos genéticos progresivos que debilitan los músculos y afectan la capacidad motora de la persona.'),
+																('Física o Motora','Esclerosis múltiple','Enfermedad autoinmune crónica que afecta el sistema nervioso central y causa problemas de movilidad, fatiga y coordinación.'),
+																('Física o Motora','Lesiones en la médula espinal','Daño a la médula espinal que provoca pérdida de función motora y sensorial, incluyendo parálisis en diversas partes del cuerpo.'),
+																('Sensorial','Visual','Afecta la capacidad de ver, desde baja visión hasta ceguera total, limitando la percepción visual y la orientación en el entorno.'),
+																('Sensorial','Auditiva','Pérdida parcial o total de la audición, que puede interferir en la comunicación verbal y la percepción de sonidos del entorno.'),
+																('Intelectual','Discapacidad Intelectual','Limitaciones significativas en el funcionamiento intelectual y en las habilidades adaptativas, lo que afecta el aprendizaje y la autonomía.'),
+																('Psíquica o Mental','Trastornos de ansiedad','Condiciones mentales caracterizadas por miedo, nerviosismo o preocupación excesiva, que interfieren con la vida diaria.'),
+																('Psíquica o Mental','Depresión crónica severa','Trastorno mental que causa un estado de ánimo persistente de tristeza, desesperanza, y pérdida de interés en actividades.'),
+																('Psíquica o Mental','Esquizofrenia','Trastorno mental grave que afecta la capacidad de pensar, sentir y comportarse con claridad, causando alucinaciones y delirios.'),
+																('Psíquica o Mental','Trastornos de personalidad','Patrones de comportamiento rígidos y disfuncionales que afectan las relaciones sociales y la percepción de uno mismo.'),
+																('Lenguaje o Comunicación','Del habla','Se refiere a dificultades significativas para hablar, expresarse o comprender el lenguaje. Puede incluir trastornos del habla, tartamudez, afasia o mutismo.'),
+																('Múltiple','Multiple','Persona con dos o más discapacidades combinadas que afectan distintas áreas de funcionamiento. Las discapacidades pueden interactuar y generar mayores desafíos en la vida diaria.');
+  
+exec Registro_Admins'Administrador123', 'Octavio Emilio Martínez Fonseca', 19, 5573868292, 'octavio@gmail.com'
+exec Registro_Empresas 'Contraseña1', 'Empresa1','Loma turquesa #317 Lomas del Mirador','empresa1@gmail.com',4493856734
+exec Registro_Solicitantes 'Tomás Alberto Baltierra Del Campo', 'Solicitante 123',20, 'Loma Azul #287 Lomas del mirador', 4497681234, 'tomas@gmail.com', 'Presentado', 4491104589, 11
+INSERT INTO Vacantes(Nombre_Puesto, Descripcion, Numero_Puestos, Id_Empresa, Id_Discapacidad) VALUES ('Diseñador de páginas web', 'Crea y diseña páginas web bajo pedido', 5, 1, 11);
+INSERT INTO Registros(Id_Vacante, Id_Solicitante, Fecha) VALUES (1,1, '2024/10/16 13:46:45');
+INSERT INTO Videos(Titulo, Descripcion, Link) VALUES ('Impresora Doom', 'impresora toca el tema de Doom', 'https://youtu.be/pG8RAbWs1yo?si=6bLaGnXUrIACOoNG');
+
+INSERT INTO Vacantes(Nombre_Puesto, Descripcion, Numero_Puestos, Id_Empresa, Id_Discapacidad) VALUES ('Conserje', 'Limpia las instalaciones de la empresa', 10, 1, 8);
