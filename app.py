@@ -1,5 +1,29 @@
-from flask import Flask, render_template, request
+#Librerias
+from flask import Flask, render_template, request, redirect, url_for, flash, session
+from werkzeug.security import generate_password_hash, check_password_hash
+from db.database import CDB
+
+"""
+from flask_wtf.csrf import CSRFProtect
+from flask_login import LoginManager, login_user, logout_user, login_required
+from PIL import Image
+from fpdf import FPDF
+from datetime import datetime
+
+import base64
+import hashlib
+from config import config
+"""
+
 import pymysql
+import re
+import io
+
+cdb = CDB()
+cdb.connectDB()
+conn = CDB()
+conn.__init__()
+user_name = "None"
 
 app = Flask(__name__)
 
@@ -22,8 +46,8 @@ def loginAccess():
         _name = request.form['name']
         _pass = request.form['password']
 
-        cur = cbd.cursor
-        cur.execute('SELECT id, nombrec, correo, contraseña_encriptada FROM usuario WHERE correo = %s', (_correo,))
+        cur = cdb.cursor
+        cur.execute('SELECT id, user, correo, contraseña_encriptada FROM usuario WHERE correo = %s', (_correo,))
         user = cur.fetchone()
 
         if user:
