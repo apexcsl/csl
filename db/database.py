@@ -61,7 +61,7 @@ class CDB():
     def createTableUser(self):
         try:
             self.cursor.execute("CREATE TABLE IF NOT EXISTS user (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(255), email VARCHAR(255), password VARCHAR(255), role VARCHAR(255))")
-            print("\nTabla creada con éxito\n")
+            print("\nTabla creada con éxito")
         except pymysql.Error as err:
             print(f"\nError al crear la tabla user: {err}")
 
@@ -72,9 +72,9 @@ class CDB():
             if self.cursor.fetchone()[0] == 0:
                 self.cursor.execute("INSERT INTO user (username, email, password, role) VALUES (%s, %s, %s, %s)", (username, email, password, role))
                 self.conection.commit()
-                print("\nUsuario insertado con éxito\n")
+                print("Usuario insertado con éxito")
             else:
-                print("\nEl usuario ya existe\n")
+                print("El usuario ya existe")
         except pymysql.Error as err:
             print(f"\nError al insertar el usuario: {err}")
 

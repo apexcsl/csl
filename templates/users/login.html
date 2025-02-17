@@ -8,6 +8,11 @@
     <div class="login-header">
         <header>Login</header>
     </div>
+    
+    {% if mensaje1 %}
+    {{mensaje1}}
+    {% endif %}
+
     <div class="input-box">
         <input type="name" id="name" name="name" placeholder="User name" required>
     </div>
