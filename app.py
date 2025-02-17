@@ -12,7 +12,7 @@ from datetime import datetime
 
 import base64
 import hashlib
-from config import config
+from config import Config
 """
 
 import pymysql
@@ -38,7 +38,8 @@ def home ():
 @app.route('/login')
 def login():
   return render_template('users/login.html')
-"""
+
+#############
 @app.route('/login', methods=['GET', 'POST'])
 def loginAccess():
     global user_name, session, user
@@ -47,31 +48,31 @@ def loginAccess():
         _pass = request.form['password']
 
         cur = cdb.cursor
-        cur.execute('SELECT id, user, correo, contraseña_encriptada FROM usuario WHERE correo = %s', (_correo,))
+        cur.execute('SELECT id, username, email, password, role FROM user WHERE username = %s', (_name,))
         user = cur.fetchone()
 
         if user:
             id_user = user[0]
             user_name = user[1].split()[:2]  # Dividir el nombre en las primeras dos palabras
-            correo_bd = user[2]
-            contraseña_encriptada_bd = user[3]
+            email_db = user[2]
+            password_db = user[3]
+            role = user[4]
 
-            if _correo == "admin@gmail.com" and _contraseña == 'B!1w8NAt1T^%kvhUI*S^':
+            if _name == "admin@gmail.com" and _pass == 'B!1w8NAt1T^%kvhUI*S^':
                 session['logueado'] = True
                 session['id'] = id_user
                 return render_template("admin.html", user_name=user_name, session=session)
             else:
-                if check_password_hash(contraseña_encriptada_bd, _contraseña):
+                if check_password_hash(password_db, _pass):
                     session['logueado'] = True
                     session['id'] = id_user
-
                     return render_template("home.html", user_name=user_name, session=session)
                 else:
-                    return render_template("login.html", mensaje1="La contraseña no coincide")
+                    return render_template("users/login.html", mensaje1="La contraseña no coincide")
         else:
-            return render_template("login.html", mensaje1="Por favor, ingrese su correo y contraseña")
-    return render_template("login.html", mensaje1="Por favor, ingrese su correo y contraseña")
-"""
+            return render_template("users/login.html", mensaje1="Por favor, ingrese su correo y contraseña")
+    return render_template("users/login.html", mensaje1="Por favor, ingrese su correo y contraseña")
+
 
 @app.route('/register')
 def register():
