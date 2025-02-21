@@ -1,7 +1,48 @@
 {% extends "/index.html" %}
 
 {% block content %}
+<center>
+<link rel="stylesheet" href="/static/css/login.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<div class="login-box">
+    <form action="/registerProcess" method="post">
+        <div class="login-header">
+                <header>Register</header>
+        </div>
+        
+        {% if mensaje1 %}
+        {{mensaje1}}
+        {% endif %}
 
+        <div class="input-box">
+                <input type="text" class="input-field" id="name" name="name" placeholder="User name" required>
+        </div>
 
+        <div class="input-box">
+            <input type="email" class="input-field" id="email" name="email" placeholder="Email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address">
+        </div>
+
+        <div class="input-box">
+                <input type="password" class="input-field" id="password" name="password" placeholder="Password" required>
+        </div>
+        <div class="forgot">
+                <section>
+                        <input type="checkbox" id="check">
+                        <label for="check">Remember me</label>
+                </section>
+                <section>
+                        <a href="#">Forgot password</a>
+                </section>  
+        </div>
+        <div class="input-submit">
+                <button class="submit-btn" id="submit">Register</button>
+        </div>
+        <div class="sign-up-link">
+                <p>Already have an account? <a href="#">Sign In</a></p>
+        </div>
+    </form>
+</div>
+
+</center>
 
 {% endblock %}

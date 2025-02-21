@@ -15,6 +15,7 @@ import hashlib
 from config import Config
 """
 
+from config import config
 import pymysql
 import re
 import io
@@ -26,6 +27,7 @@ conn.__init__()
 user_name = "None"
 
 app = Flask(__name__)
+app.config.from_object('config.DevelopmentConfig')
 
 @app.route('/')
 def index():
@@ -40,7 +42,7 @@ def login():
   return render_template('users/login.html')
 
 #############
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/loginProcess', methods=['GET', 'POST'])
 def loginAccess():
     global user_name, session, user
     if request.method == 'POST' and 'name' in request.form and 'password':
@@ -77,6 +79,25 @@ def loginAccess():
 @app.route('/register')
 def register():
   return render_template('users/register.html')
+
+@app.route('/registerProcess', methods=['GET', 'POST'])
+def registerAccess():
+    if request.method == 'POST' and 'name' in request.form and 'email' in request.form and 'password' in request.form:
+        _name = request.form['name']
+        _email = request.form['email']
+        _pass = request.form['password']
+
+        cur = cdb.cursor
+        cur.execute('SELECT COUNT(*) FROM user WHERE username = %s AND email = %s', (_name, _email))
+        if cur.fetchone()[0] == 0:
+            cur.execute('INSERT INTO user (username, email, password, role) VALUES (%s, %s, %s, %s)',
+                        (_name, _email, generate_password_hash(_pass), 'user'))
+            cdb.conection.commit()
+            return render_template("users/login.html", mensaje="Usuario registrado con éxito")
+        else:
+            return render_template("users/register.html", mensaje="El usuario ya existe")
+    return render_template("users/register.html", mensaje="Por favor, llene todos los campos")
+
 
 if __name__ == '__main__':
   app.run(debug=True)
