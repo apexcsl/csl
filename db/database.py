@@ -1,6 +1,7 @@
 # Librerias necesarias para la conexion a la base de datos
 import re
 import pymysql
+from werkzeug.security import generate_password_hash
 
 # Clase para creacion y/o conexion a la base de datos
 class CDB():
@@ -57,20 +58,44 @@ class CDB():
     else:
         print(f"\nNo se encontró la información")
 
-    # Funcion para crear la tabla usuarios
-    def createTableUser(self):
+    # Funcion para crear la tabla Admins
+    def createTableAdmins(self):
         try:
-            self.cursor.execute("CREATE TABLE IF NOT EXISTS user (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(255), email VARCHAR(255), password VARCHAR(255), role VARCHAR(255))")
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS Admins (AdminID INT AUTO_INCREMENT PRIMARY KEY, Username VARCHAR(255), Email VARCHAR(255), EncryptedPassword VARCHAR(255), role VARCHAR(255))")
+            print("\nTabla creada con éxito")
+        except pymysql.Error as err:
+            print(f"\nError al crear la tabla user: {err}")
+    
+    # Funcion para crear la tabla Applicants
+    def createTableApplicants(self):
+        try:
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS Applicants (ApplicantID INT AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255), FirstSurname VARCHAR(255), SecondSurname VARCHAR(255), Email VARCHAR(255), EncryptedPasswdA VARCHAR(255), Age INT, Phone VARCHAR(255), Address VARCHAR(255),  CV LONGBLOB, EmergencyContact VARCHAR(255), Related VARCHAR(255), DisabilityID INT)")
+            print("\nTabla creada con éxito")
+        except pymysql.Error as err:
+            print(f"\nError al crear la tabla user: {err}")
+
+    # Funcion para crear la tabla Companies
+    def createTableCompanies(self):
+        try:
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS Companies (CompanyID INT AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255), Email VARCHAR(255), EncryptedPasswdC VARCHAR(255), Phone VARCHAR(255), Address VARCHAR(255), Description VARCHAR(255), Logo LONGBLOB, RFC VARCHAR(255))")
+            print("\nTabla creada con éxito")
+        except pymysql.Error as err:
+            print(f"\nError al crear la tabla user: {err}")
+
+    # Funcion para crear la tabla Disabilities
+    def createTableDisabilities(self):
+        try:
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS Disabilities (DisabilityID INT AUTO_INCREMENT PRIMARY KEY, Category VARCHAR(255), Name VARCHAR(255), Description VARCHAR(255))")
             print("\nTabla creada con éxito")
         except pymysql.Error as err:
             print(f"\nError al crear la tabla user: {err}")
 
     # Funcion para insertar un usuario predeterminado
-    def insertUser(self, username, email, password, role):
+    def insertUser(self, username, email, password):
         try:
-            self.cursor.execute("SELECT COUNT(*) FROM user WHERE username = %s AND email = %s", (username, email))
+            self.cursor.execute("SELECT COUNT(*) FROM Admins WHERE Username = %s AND Email = %s", (username, email))
             if self.cursor.fetchone()[0] == 0:
-                self.cursor.execute("INSERT INTO user (username, email, password, role) VALUES (%s, %s, %s, %s)", (username, email, password, role))
+                self.cursor.execute("INSERT INTO Admins (Username, Email, EncrytedPassword) VALUES (%s, %s, %s)", (username, email, password))
                 self.conection.commit()
                 print("Usuario insertado con éxito")
             else:
@@ -78,11 +103,42 @@ class CDB():
         except pymysql.Error as err:
             print(f"\nError al insertar el usuario: {err}")
 
+    #Funcion para insertar discapacidades
+    def insertDisability(self, category, name, description):
+        try:
+            self.cursor.execute("SELECT COUNT(*) FROM Disabilities WHERE Category = %s AND Name = %s", (category, name))
+            if self.cursor.fetchone()[0] == 0:
+                self.cursor.execute("INSERT INTO Disabilities (Category, Name, Description) VALUES (%s, %s, %s)", (category, name, description))
+                self.conection.commit()
+                print("Discapacidades insertada con éxito")
+            else:
+                print("La discapacidad ya existe")
+        except pymysql.Error as err:
+            print(f"\nError al insertar la discapacidad: {err}")
+
     # Funcion al conectar a la base de datos
     def connectDB(self):
         try:
-            self.createTableUser()
-            self.insertUser('May', 'mayrinreyes1707@gmail.com', 'Kirbytest', 'admin')
+            self.createTableAdmins()
+            self.createTableApplicants()
+            self.createTableCompanies()
+            self.createTableDisabilities()
+            self.insertUser('AdminP', 'admin@gmail.com', 'B!1w8NAt1T^%kvhUI*S^')
+            datos = [
+                ('Fisica o Motora', 'Parálisis', 'Pérdida completa o parcial de la capacidad de movimiento de una o más partes del cuerpo debido a daño en el sistema nervioso o muscular.'),
+                ('Fisica o Motora', 'Amputaciones', 'Pérdida de una extremidad o parte del cuerpo, que afecta la movilidad y el uso de prótesis o adaptaciones.'),
+                ('Fisica O Motora', 'Distrofias musculares', 'Trastornos genéticos progresivos que debilitan los músculos y afectan la capacidad motora de la persona.'),
+                ('Fisica o Motora', 'Escleorosis múltiple', 'Enfermedad autoinmune crónica que afecta el sistema nervioso central y causa problemas de movilidad, fatiga y coordinación.'),
+                ('Fisica o Motora', 'Lesiones en la médula espinal', 'Daño a la médula espinal que provoca pérdida de función motora y sensorial, incluyendo parálisis en diversas partes del cuerpo.'),
+                ('Sensorial', 'Visual', 'Afecta la capacidad de ver, desde baja visión hasta ceguera total, limitando la percepción visual y la orientación en el entorno.'),
+                ('Sensorial', 'Auditiva', 'Pérdida parcial o total de la audición, que puede interferir en la comunicación verbal y la percepción de sonidos del entorno.'),
+                ('Intelectual', 'Discapacidad Intelectual', 'Limitaciones significativas en el funcionamiento intelectual y en las habilidades adaptativas, lo que afecta el aprendizaje y la autonomía.'),
+                ('Psíquica o Mental', 'Transtornos de ansiedad', 'Condiciones mentales caracterizadas por miedo, nerviosismo o preocupación excesiva, que interfieren con la vida diaria.'),
+                ('Psíquica o Mental', 'Depresión cronica severa', 'Trastorno mental que causa un estado de ánimo persistente de tristeza, desesperanza, y pérdida de interés en actividades.'),
+                ('Psíquica o Mental', 'Esquizofrenia', 'Trastorno mental grave que afecta la capacidad de pensar, sentir y comportarse con claridad, causando alucinaciones y delirios.'),
+                ('Psíquica o Mental', 'Transtornos de personalidad', 'Patrones de comportamiento rígidos y disfuncionales que afectan las relaciones sociales y la percepción de uno mismo')]
+            for category, name, description in datos:
+                self.insertDisability(category, name, description)
         except pymysql.Error as err:
             print(f"\nError al conectar a la base de datos: {err}")
 
