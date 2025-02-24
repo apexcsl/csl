@@ -9,7 +9,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required
 from PIL import Image
 from fpdf import FPDF
 from datetime import datetime
-
+...from functools import wraps
 import base64
 import hashlib
 from config import Config
@@ -60,14 +60,14 @@ def loginAccess():
             password_db = user[3]
             role = user[4]
 
-            if _name == "admin@gmail.com" and _pass == 'B!1w8NAt1T^%kvhUI*S^':
-                session['logueado'] = True
+            if _name == "AdminP" and _pass == 'B!1w8NAt1T^%kvhUI*S^':
                 session['id'] = id_user
-                return render_template("admin.html", user_name=user_name, session=session)
+                session['role'] = role
+                return render_template("home.html", user_name=user_name, session=session)
             else:
                 if check_password_hash(password_db, _pass):
-                    session['logueado'] = True
                     session['id'] = id_user
+                    session['role'] = role
                     return render_template("home.html", user_name=user_name, session=session)
                 else:
                     return render_template("users/login.html", mensaje1="La contraseña no coincide")
@@ -98,6 +98,14 @@ def registerAccess():
             return render_template("users/register.html", mensaje="El usuario ya existe")
     return render_template("users/register.html", mensaje="Por favor, llene todos los campos")
 
+"""@app.route('/logout')
+def logout():
+
+    session.pop('username', None)
+    session.pop('logueado', None)
+    session.pop('id', None)
+    return render_template('login.html')
+"""
 
 if __name__ == '__main__':
   app.run(debug=True)
