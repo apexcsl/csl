@@ -3,66 +3,119 @@
 {% block content %}
 <center>
 
-<style>
-        body {
-                font-family: Arial, sans-serif;
-                text-align: center;
-                margin: 20px;
-        }
-
-        .switch-container {
-                display: flex;
-                justify-content: center;
-                margin-bottom: 20px;
-        }
-
-        .switch {
-                position: relative;
-                width: 120px;
-                height: 30px;
-                background: #ddd;
-                border-radius: 15px;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 5px;
-        }
-
-        .slider {
-                position: absolute;
-                top: 3px;
-                left: 5px;
-                width: 30px;
-                height: 24px;
-                background: white;
-                border-radius: 12px;
-                transition: 0.3s;
-        }
-
-        .labels {
-                width: 100%;
-                display: flex;
-                justify-content: space-between;
-                font-size: 12px;
-                color: #555;
-        }
-
-        select {
-                display: none;
-        }
-
-        .content {
-                display: none;
-                padding: 20px;
-                max-width: 300px;
-                margin: auto;
-        }
-
-        .active {
-                display: inline;
-        }
-</style>
-
+        <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    text-align: center;
+                    margin: 20px;
+                    background-color: #f4f4f4;
+                }
+            
+                .switch-container {
+                    display: flex;
+                    justify-content: center;
+                    margin-bottom: 20px;
+                }
+            
+                .switch {
+                    position: relative;
+                    width: 120px;
+                    height: 30px;
+                    background: #ddd;
+                    border-radius: 15px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 5px;
+                    cursor: pointer;
+                }
+            
+                .slider {
+                    position: absolute;
+                    top: 3px;
+                    left: 5px;
+                    width: 30px;
+                    height: 24px;
+                    background: white;
+                    border-radius: 12px;
+                    transition: 0.3s;
+                }
+            
+                .labels {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 12px;
+                    color: #555;
+                    padding: 0 10px;
+                }
+            
+                .content {
+                    display: none;
+                    padding: 20px;
+                    max-width: 400px;
+                    width: 100%;
+                    margin: auto;
+                    background: #fff;
+                    border-radius: 10px;
+                    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                }
+            
+                .active {
+                    display: block;
+                }
+            
+                .login-box {
+                    width: 100%;
+                    padding: 20px;
+                    text-align: left;
+                }
+            
+                .input-box {
+                    width: 100%;
+                    margin-bottom: 10px;
+                }
+            
+                .input-field {
+                    width: 100%;
+                    padding: 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    font-size: 14px;
+                    box-sizing: border-box;
+                }
+            
+                .input-submit {
+                    text-align: center;
+                }
+            
+                .submit-btn {
+                    width: 100%;
+                    padding: 10px;
+                    background-color: #007BFF;
+                    border: none;
+                    color: white;
+                    border-radius: 5px;
+                    font-size: 16px;
+                    cursor: pointer;
+                }
+            
+                .submit-btn:hover {
+                    background-color: #0056b3;
+                }
+            
+                .forgot {
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 12px;
+                }
+            
+                .sign-up-link {
+                    text-align: center;
+                    margin-top: 10px;
+                }
+            
+            </style>
 <link rel="stylesheet" href="/static/css/login.css">
 <link rel="stylesheet" href="/static/css/style.css">
 
@@ -90,6 +143,10 @@
                         {% if mensaje1 %}
                         {{mensaje1}}
                         {% endif %}
+<!--
+                        <div class="input-box">
+                                <input type="text" class="input-field" id="username" name="username" placeholder="Nombre" required>
+                        </div>
 
                         <div class="input-box">
                                 <input type="text" class="input-field" id="name" name="name" placeholder="Nombre" required>
@@ -138,7 +195,7 @@
                         <div class="input-box">
                                 <input type="tel" class="input-field" id="emergencyc" name="emergencyc" placeholder="Contacto de emergencia" required>
                         </div>
-
+-->
                         <div class="input-box">
                                 <input type="text" class="input-field" id="related" name="related" placeholder="Parentezco" required>
                         </div>
@@ -206,10 +263,10 @@
                         </div>
 
                         <div class="input-box">
-                                <input type="file" class="input-field" id="logo" name="logo" placeholder="Logo" accept="image/*" required>
+                                <input type="file" class="input-field" id="logo" name="logo" placeholder="Logo" required>
                         </div>
 
-                        <!-- --><div class="forgot">
+                        <!-- <div class="forgot">
                                 <section>
                                         <input type="checkbox" id="check">
                                         <label for="check">Remember me</label>
@@ -217,7 +274,7 @@
                                 <section>
                                         <a href="#">Forgot password</a>
                                 </section>  
-                        </div>
+                        </div>-->
                         <div class="input-submit">
                                 <button class="submit-btn" id="submit">Register</button>
                         </div>
@@ -278,7 +335,7 @@ function changeState() {
 
         // Mover el slider a la posición correcta
         let slider = document.getElementById("slider");
-        slider.style.transform = `translateX(${(position - 1) * 45}px)`;
+        slider.style.transform = `translateX(${(position - 1) * 40}px)`;
 
         // Ocultar todos los contenidos
         document.querySelectorAll('.content').forEach(el => el.classList.remove('active'));
