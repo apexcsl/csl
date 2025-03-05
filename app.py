@@ -137,7 +137,8 @@ def registerAccessAppli():
 
 @app.route('/registerProcessCompanies', methods=['GET', 'POST'])
 def registerAccessCompanies():
-    if request.method == 'POST' and 'name' in request.form and 'email' in request.form and 'password' in request.form and 'phone' in request.form and 'address' in request.form and 'description' in request.form and 'rfc' in request.form and 'logo' in request.files:
+    print(request.form)
+    if request.method == 'POST':
         _name = request.form['name']
         _email = request.form['email']
         _pass = request.form['password']
@@ -146,22 +147,26 @@ def registerAccessCompanies():
         _description = request.form['description']
         _rfc = request.form['rfc']
         _logo = request.files['logo']
-        tipo = _logo.mimetype
+
+        type = _logo.mimetype
+
         logo_compr = compressImage(_logo)
-        print(logo_compr, tipo, _logo, _rfc, _description, _address, _phone, _pass, _email, _name)
+
+    
         cur = cdb.cursor
         cur.execute('SELECT COUNT(*) FROM companies WHERE name = %s AND rfc = %s', (_name, _rfc))
         if cur.fetchone()[0] == 0:
-            print(cur.fetchone())
+
             cur.execute('INSERT INTO companies (name, email, encryptedpasswdc, phone, address, description, rfc, logo, type) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)',
-                        (_name, _email, generate_password_hash(_pass), _phone, _address, _description, _rfc, logo_compr, tipo))
+                        (_name, _email, generate_password_hash(_pass), _phone, _address, _description, _rfc, logo_compr, type))
             cdb.conection.commit()
+
             print("Empresa registrada con éxito")
             return render_template("users/login.html", mensaje1="Empresa registrada con éxito")
-            
         else:
             print("La empresa ya existe")
             return render_template("users/register.html", mensaje1="La empresa ya existe")
+        
     print("Por favor, llene todos los campos")        
     return render_template("users/register.html", mensaje1="Por favor, llene todos los campos")
     
