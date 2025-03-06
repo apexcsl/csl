@@ -83,10 +83,16 @@ def loginAccess():
             return render_template("users/login.html", mensaje1="Por favor, ingrese su correo y contraseña")
     return render_template("users/login.html", mensaje1="Por favor, ingrese su correo y contraseña")
 
+def get_disabilities():
+    cur = cdb.cursor
+    cur.execute("SELECT disabilityid, name FROM disabilities")  # Ajusta la consulta
+    opciones = cur.fetchall()
+    return opciones
 
 @app.route('/register')
 def register():
-  return render_template('users/register.html')
+  disabilities1 = get_disabilities()
+  return render_template('users/register.html', disabilities=disabilities1)
 
 @app.route('/registerProcess', methods=['GET', 'POST'])
 def registerAccess():
@@ -108,7 +114,8 @@ def registerAccess():
 
 @app.route('/registerProcessApplicants', methods=['GET', 'POST'])
 def registerAccessAppli():
-    if request.method == 'POST' and 'username' in request.form and 'name' in request.form and 'firstname' in request.form and 'secname' in request.form  and 'email' in request.form and 'password' in request.form and 'age' in request.form and 'phone' in request.form and 'address' in request.form and 'state' in request.form and 'municipaly' in request.form and 'cv' in request.form and 'emergencyc' in request.form and 'related' in request.form and 'disability' in request.form:
+    if request.method == 'POST':
+        
         _username = request.form['username']
         _name = request.form['name']
         _firstname = request.form['firstname']
@@ -120,19 +127,25 @@ def registerAccessAppli():
         _address = request.form['address']
         _state = request.form['state']
         _municipaly = request.form['municipaly']
-        _cv = request.file['cv']
+        #_cv = request.files['cv']
+
         _emergencyc = request.form['emergencyc']
         _related = request.form['related']
-
+        _disabilityid = request.form['disability']
+        
         cur = cdb.cursor
-        cur.execute('SELECT COUNT(*) FROM user WHERE name = %s AND email = %s', (_name, _email))
+        cur.execute('SELECT COUNT(*) FROM applicants WHERE username = %s AND email = %s', (_username, _email))
         if cur.fetchone()[0] == 0:
-            cur.execute('INSERT INTO user (username, email, password, role) VALUES (%s, %s, %s, %s)',
-                        (_name, _email, generate_password_hash(_pass), 'user'))
+            """cur.execute('INSERT INTO applicants (username, name, firstname, secname, email, encryptedpasswda, age, phone, address, state, municipaly, cv, emergencycontact, related, disabilityid) VALUES (%s, %s, %s, %s)',
+                        (_username, _firstname, _secname, _name, _email, generate_password_hash(_pass), _age, _phone, _address, _state, _municipaly, _cv, _emergencyc, _related, _disabilityid))"""
+            cur.execute('INSERT INTO applicants (username, name, firstname, secname, email, encryptedpasswda, age, phone, address, state, municipaly, emergencycontact, related, disabilityid) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+                        (_username, _name, _firstname, _secname,  _email, generate_password_hash(_pass), _age, _phone, _address, _state, _municipaly, _emergencyc, _related, _disabilityid))
             cdb.conection.commit()
             return render_template("users/login.html", mensaje="Usuario registrado con éxito")
         else:
+            print("El usuario ya existe")
             return render_template("users/register.html", mensaje="El usuario ya existe")
+    print("Por favor, llene todos los campos")
     return render_template("users/register.html", mensaje="Por favor, llene todos los campos")
 
 @app.route('/registerProcessCompanies', methods=['GET', 'POST'])
@@ -144,6 +157,8 @@ def registerAccessCompanies():
         _pass = request.form['password']
         _phone = request.form['phone']
         _address = request.form['address']
+        _state = request.form['state']
+        _municipaly = request.form['municipaly']
         _description = request.form['description']
         _rfc = request.form['rfc']
         _logo = request.files['logo']
@@ -157,8 +172,8 @@ def registerAccessCompanies():
         cur.execute('SELECT COUNT(*) FROM companies WHERE name = %s AND rfc = %s', (_name, _rfc))
         if cur.fetchone()[0] == 0:
 
-            cur.execute('INSERT INTO companies (name, email, encryptedpasswdc, phone, address, description, rfc, logo, type) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)',
-                        (_name, _email, generate_password_hash(_pass), _phone, _address, _description, _rfc, logo_compr, type))
+            cur.execute('INSERT INTO companies (name, email, encryptedpasswdc, phone, address, state, municipaly, description, rfc, logo, type) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+                        (_name, _email, generate_password_hash(_pass), _phone, _address, _state, _municipaly, _description, _rfc, logo_compr, type))
             cdb.conection.commit()
 
             print("Empresa registrada con éxito")

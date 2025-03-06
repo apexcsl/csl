@@ -143,7 +143,7 @@
                         {% if mensaje1 %} 
                         {{mensaje1}}
                         {% endif %}
-<!--
+                        
                         <div class="input-box">
                                 <input type="text" class="input-field" id="username" name="username" placeholder="Nombre" required>
                         </div>
@@ -187,22 +187,25 @@
                         <div class="input-box">
                                 <input type="text" class="input-field" id="municipaly" name="municipaly" placeholder="Municipio" required>
                         </div>
-
+<!--   
                         <div class="input-box">
                                 <input type="file" class="input-field" id="cv" name="cv" placeholder="Curriculum" accept="application/pdf" required>
                         </div>
-
+ -->
                         <div class="input-box">
                                 <input type="tel" class="input-field" id="emergencyc" name="emergencyc" placeholder="Contacto de emergencia" required>
                         </div>
--->
+
                         <div class="input-box">
                                 <input type="text" class="input-field" id="related" name="related" placeholder="Parentezco" required>
                         </div>
                         
-                        <div class="input-box">
-                                <input type="text" class="input-field" id="related" name="related" placeholder="Discapacidad arreglar xd" required>
-                        </div>
+                        <select name="disability" id="disability" class="input-field">
+                                <option value="">-- Seleccionar discapacidad --</option>
+                                {% for disability in disabilities %}
+                                <option value="{{disability[0]}}">{{disability[1]}}</option>
+                                {% endfor %}
+                        </select>
 
                         <div class="forgot">
                                 <section>
@@ -252,6 +255,14 @@
 
                         <div class="input-box">
                                 <input type="text" class="input-field" id="address" name="address" placeholder="Dirección" required>
+                        </div>
+
+                        <div class="input-box">
+                                <input type="text" class="input-field" id="state" name="state" placeholder="Estado" required>
+                        </div>
+
+                        <div class="input-box">
+                                <input type="text" class="input-field" id="municipaly" name="municipaly" placeholder="Municipio" required>
                         </div>
 
                         <div class="input-box">
