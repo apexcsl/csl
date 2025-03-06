@@ -2,7 +2,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from db.database import CDB
-from PIL import Image
+
 """
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager, login_user, logout_user, login_required
@@ -16,9 +16,8 @@ from config import Config
 """
 
 from config import config
-import pymysql
-import re
-import io
+
+from mediaUploader import *
 
 cdb = CDB()
 cdb.connectDB()
@@ -29,13 +28,7 @@ user_name = "None"
 app = Flask(__name__)
 app.config.from_object('config.DevelopmentConfig')
 
-def compressImage(image):
-    img = Image.open(image)
-    img = img.convert('RGB')
-    img.thumbnail((1000, 1000))  
-    imgComprimida = io.BytesIO()
-    img.save(imgComprimida, format='JPEG', quality=90)  
-    return imgComprimida.getvalue()
+
 
 @app.route('/')
 def index():
@@ -112,6 +105,11 @@ def registerAccess():
             return render_template("users/register.html", mensaje="El usuario ya existe")
     return render_template("users/register.html", mensaje="Por favor, llene todos los campos")
 
+
+
+
+
+
 @app.route('/registerProcessApplicants', methods=['GET', 'POST'])
 def registerAccessAppli():
     if request.method == 'POST':
@@ -127,19 +125,22 @@ def registerAccessAppli():
         _address = request.form['address']
         _state = request.form['state']
         _municipaly = request.form['municipaly']
-        #_cv = request.files['cv']
-
+        cv = request.files['cv']
         _emergencyc = request.form['emergencyc']
         _related = request.form['related']
         _disabilityid = request.form['disability']
         
+        _cv_data = compressPdf(cv)
+
         cur = cdb.cursor
         cur.execute('SELECT COUNT(*) FROM applicants WHERE username = %s AND email = %s', (_username, _email))
         if cur.fetchone()[0] == 0:
-            """cur.execute('INSERT INTO applicants (username, name, firstname, secname, email, encryptedpasswda, age, phone, address, state, municipaly, cv, emergencycontact, related, disabilityid) VALUES (%s, %s, %s, %s)',
-                        (_username, _firstname, _secname, _name, _email, generate_password_hash(_pass), _age, _phone, _address, _state, _municipaly, _cv, _emergencyc, _related, _disabilityid))"""
-            cur.execute('INSERT INTO applicants (username, name, firstname, secname, email, encryptedpasswda, age, phone, address, state, municipaly, emergencycontact, related, disabilityid) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
-                        (_username, _name, _firstname, _secname,  _email, generate_password_hash(_pass), _age, _phone, _address, _state, _municipaly, _emergencyc, _related, _disabilityid))
+            cur.execute('INSERT INTO applicants (username, name, firstname, secname, email, encryptedpasswda, age, phone, address, state, municipaly, Cv_Name, Cv_Data, emergencycontact, related, disabilityid) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+                        (_username, _firstname, _secname, _name, _email, generate_password_hash(_pass), _age, _phone, _address, _state, _municipaly, cv.filename, _cv_data, _emergencyc, _related, _disabilityid))
+            
+            """cur.execute('INSERT INTO applicants (username, name, firstname, secname, email, encryptedpasswda, age, phone, address, state, municipaly, emergencycontact, related, disabilityid) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+                        (_username, _name, _firstname, _secname,  _email, generate_password_hash(_pass), _age, _phone, _address, _state, _municipaly, _emergencyc, _related, _disabilityid))"""
+            
             cdb.conection.commit()
             return render_template("users/login.html", mensaje="Usuario registrado con éxito")
         else:
@@ -147,6 +148,11 @@ def registerAccessAppli():
             return render_template("users/register.html", mensaje="El usuario ya existe")
     print("Por favor, llene todos los campos")
     return render_template("users/register.html", mensaje="Por favor, llene todos los campos")
+
+
+
+
+
 
 @app.route('/registerProcessCompanies', methods=['GET', 'POST'])
 def registerAccessCompanies():
