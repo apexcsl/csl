@@ -68,6 +68,7 @@ section a{
     border-radius: 30px;
     cursor: pointer;
     transition: .3s;
+    color: #707070;
 }
 .input-submit label{
     position: absolute;
@@ -80,6 +81,7 @@ section a{
     cursor: pointer;
 }
 .submit-btn:hover{
+    color: #fff;
     background: #000;
     transform: scale(1.05,1);
 }
