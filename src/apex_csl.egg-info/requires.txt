@@ -1,0 +1,8 @@
+flask
+pillow
+werkzeug
+fpdf
+flask-wtf
+flask-login
+datetime
+pymysql
