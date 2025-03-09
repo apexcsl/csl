@@ -881,3 +881,39 @@ nav {
   }
 
 }
+
+.profile-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-btn {
+  background-color: #ff5733; /* Color del botón */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.profile-dropdown {
+  display: none;
+  position: absolute;
+  background-color: white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  min-width: 150px;
+  border-radius: 5px;
+  overflow: hidden;
+  right: 0;
+}
+
+.profile-dropdown a {
+  display: block;
+  padding: 10px;
+  color: black;
+  text-decoration: none;
+}
+
+.profile-dropdown a:hover {
+  background-color: #f0f0f0;
+}

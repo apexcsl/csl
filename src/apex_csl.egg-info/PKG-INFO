@@ -1,6 +1,6 @@
 Metadata-Version: 2.2
 Name: apex_csl
-Version: 0.1.46
+Version: 0.1.5
 Summary: A Python package for the Apex: "Camino sin Límites" project.
 Author-email: Daniel Tenorio <danyjr@outlook.es>, Mayrin Reyes <mayrinreyes1707@gmail.com>
 Requires-Python: >=3.10
@@ -12,3 +12,5 @@ Requires-Dist: flask-wtf
 Requires-Dist: flask-login
 Requires-Dist: datetime
 Requires-Dist: pymysql
+Requires-Dist: flask_session
+Requires-Dist: redis
