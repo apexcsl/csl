@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, session, send_file, g
+from flask import Flask, render_template, request, redirect, url_for, session, send_file, g, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from db.database import CDB
 
 from config import config
 from mediaUploader import *
+from mfaSender import *
+
 
 cdb = CDB()
 cdb.connectDB()
@@ -44,46 +46,62 @@ def loginAccess():
 
         # Superadmin Hardcodeado
         if _email == "apexcsl@gmail.com" and _pass == 'B!1w8NAt1T^%kvhUI*S^':
-            session['id'] = 0
-            session['role'] = 'superadmin'
-            session['user_name'] = 'Admin Principal'
-            session.permanent = True
-            return redirect(url_for('index'))
+            session['temp_user'] = {'id': 0, 'role': 'superadmin', 'user_name': 'Admin Principal', 'email': _email}
+            if send_otp(_email):
+                return redirect(url_for('verify_otp'))
+            else:
+                flash("Error enviando el código de verificación")
+                return redirect(url_for('login'))
 
         # Verificar usuario en DB
         cur.execute('SELECT AdminId, UserName, EncryptedPassword FROM admins WHERE email = %s', (_email,))
         admin = cur.fetchone()
         
         if admin and check_password_hash(admin[2], _pass):
-            session['id'] = admin[0]
-            session['role'] = 'admin'
-            session['user_name'] = admin[1]
-            session.permanent = True
-            return redirect(url_for('index'))
-        
+            session['temp_user'] = {'id': admin[0], 'role': 'admin', 'user_name': admin[1], 'email': _email}
+            if send_otp(_email):
+                return redirect(url_for('verify_otp'))
+            else:
+                flash("Error enviando el código de verificación")
+                return redirect(url_for('login'))
+
         cur.execute('SELECT CompanyId, name, EncryptedPasswdC FROM companies WHERE email = %s', (_email,))
         company = cur.fetchone()
         
         if company and check_password_hash(company[2], _pass):
-            session['id'] = company[0]
-            session['role'] = 'company'
-            session['user_name'] = company[1]
-            session.permanent = True
-            return redirect(url_for('index'))
-        
+            session['temp_user'] = {'id': company[0], 'role': 'company', 'user_name': company[1], 'email': _email}
+            if send_otp(_email):
+                return redirect(url_for('verify_otp'))
+            else:
+                flash("Error enviando el código de verificación")
+                return redirect(url_for('login'))
+
         cur.execute('SELECT ApplicantId, UserName, EncryptedPasswdA, name FROM applicants WHERE email = %s', (_email,))
         applicant = cur.fetchone()
         
         if applicant and check_password_hash(applicant[2], _pass):
-            session['id'] = applicant[0]
-            session['role'] = 'applicant'
-            session['user_name'] = applicant[3]
-            session.permanent = True
-            return redirect(url_for('index'))
+            session['temp_user'] = {'id': applicant[0], 'role': 'applicant', 'user_name': applicant[3], 'email': _email}
+            if send_otp(_email):
+                return redirect(url_for('verify_otp'))
+            else:
+                flash("Error enviando el código de verificación")
+                return redirect(url_for('login'))
         
         return render_template("users/login.html", mensaje1="Usuario o contraseña incorrectos")
 
+@app.route('/verify_otp', methods=['GET', 'POST'])
+def verify_otp():
+    if request.method == 'POST':
+        user_otp = request.form.get('otp')
 
+        if user_otp and session.get('otp') == user_otp:
+            session.update(session.pop('temp_user'))  # Mueve temp_user a sesión real
+            session.pop('otp', None)
+            return redirect(url_for('index'))
+        else:
+            flash("Código incorrecto")
+
+    return render_template("users/verify_otp.html")
 
 @app.route('/logout')
 def logout():
