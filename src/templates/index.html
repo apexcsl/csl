@@ -27,8 +27,18 @@
             <li><a href="#contact">Contactos</a></li>
         </ul>
         <div class="nav-button">
-            <button class="btn" id="loginBtn"><a href="/login">Iniciar Sesion </a></button>
-            <button class="btn" id="registrarBtn"><a href="/register">Registrarme </a></button>
+            {% if g.user %}
+                <div class="profile-menu">
+                    <button class="btn profile-btn" id="profileBtn">{{ g.user }}</button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="/myProfile">Mi Perfil</a>
+                        <a href="/logout">Cerrar Sesión</a>
+                    </div>
+                </div>
+            {% else %}
+                <button class="btn" id="loginBtn"><a href="/login">Iniciar Sesión</a></button>
+                <button class="btn" id="registrarBtn"><a href="/register">Registrarme</a></button>
+            {% endif %}
         </div>
     </nav>
 
