@@ -35,6 +35,27 @@ def home ():
 def login():
   return render_template('users/login.html')
 
+@app.route('/viewAdmins')
+def viewAdmins():
+  return render_template('admins/viewAdmins.html')
+
+@app.route('/viewCompanies')
+def viewCompanies():
+  return render_template('applicants/viewCompanies.html')
+
+@app.route('/viewApplicants')
+def viewApplicants():
+  return render_template('admins/viewApplicants.html')
+
+@app.route('/viewVacancies')
+def viewVacancies():
+  return render_template('companies/viewVacancies.html')
+
+@app.route('/viewVideos')
+def viewVideos():
+  return render_template('companies/viewVideos.html')
+
+
 @app.route('/loginProcess', methods=['POST'])
 def loginAccess():
     if 'email' in request.form and 'password' in request.form:

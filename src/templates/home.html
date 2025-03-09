@@ -18,15 +18,42 @@
         </div>
     </header>
 
-
-
     {% if session['role'] == 'superadmin' %}
 
         <h1 class="seccion-header">Contenido exclusivo para super administrador</h1>
 
+        <button class="btn" id="loginBtn"><a href="/viewAdmins">Ver Administradores</a></button>
+
+        <button class="btn" id="loginBtn"><a href="/viewCompanies">Ver Empresas</a></button>
+
+        <button class="btn" id="loginBtn"><a href="/viewApplicants">Ver Solicitantes</a></button>
+
+        <button class="btn" id="loginBtn"><a href="/viewVacancies">Ver Vacantes</a></button>
+
     {% elif session['role'] == 'admin' %}
     
-        <h1  class="seccion-header">Contenido para usuarios administrador</h1>    
+        <h1  class="seccion-header">Bienvenido administrador</h1>    
+
+        <button class="btn" id="loginBtn"><a href="/viewCompanies">Ver Empresas</a></button>
+
+        <button class="btn" id="loginBtn"><a href="/viewApplicants">Ver Solicitantes</a></button>
+
+    
+    {% elif session['role'] == 'company' %}
+    
+        <h1  class="seccion-header">Bienvenido al menú de compañia</h1>  
+
+        <button class="btn" id="loginBtn"><a href="/viewVacancies">Ver Vacantes</a></button>
+
+        <button class="btn" id="loginBtn"><a href="/viewVideos">Ver Videos</a></button>
+    
+    {% elif session['role'] == 'applicant' %}
+    
+        <h1  class="seccion-header">Bienvenido al menú de solicitantes</h1>  
+
+        <button class="btn" id="loginBtn"><a href="/viewCompanies">Ver Empresas</a></button>
+
+        <button class="btn" id="loginBtn"><a href="/viewVacancies">Ver Vacantes</a></button>
 
     {% else %}
 
