@@ -6,3 +6,5 @@ flask-wtf
 flask-login
 datetime
 pymysql
+flask_session
+redis

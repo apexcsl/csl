@@ -1,22 +1,8 @@
-#Librerias
-from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
+from flask import Flask, render_template, request, redirect, url_for, session, send_file, g
 from werkzeug.security import generate_password_hash, check_password_hash
 from db.database import CDB
 
-"""
-from flask_wtf.csrf import CSRFProtect
-from flask_login import LoginManager, login_user, logout_user, login_required
-
-from fpdf import FPDF
-from datetime import datetime
-...from functools import wraps
-import base64
-import hashlib
-from config import Config
-"""
-
 from config import config
-
 from mediaUploader import *
 
 cdb = CDB()
@@ -27,6 +13,13 @@ user_name = "None"
 
 app = Flask(__name__)
 app.config.from_object('config.DevelopmentConfig')
+
+
+app.config['SESSION_TYPE'] = 'filesystem'  
+app.config['SESSION_PERMANENT'] = True     
+app.config['SESSION_USE_SIGNER'] = True    
+app.config['PERMANENT_SESSION_LIFETIME'] = 259200  
+  
 
 
 
@@ -42,82 +35,73 @@ def home ():
 def login():
   return render_template('users/login.html')
 
-
-@app.route('/loginProcess', methods=['GET', 'POST'])
+@app.route('/loginProcess', methods=['POST'])
 def loginAccess():
-    global user_name, session, user
-
-    if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
+    if 'email' in request.form and 'password' in request.form:
         _email = request.form['email']
         _pass = request.form['password']
-
-
         cur = cdb.cursor
 
-        
+        # Superadmin Hardcodeado
         if _email == "apexcsl@gmail.com" and _pass == 'B!1w8NAt1T^%kvhUI*S^':
             session['id'] = 0
             session['role'] = 'superadmin'
-            user_name = ['Admin', 'Principal']
-            return render_template("home.html", user_name=user_name, session=session)
+            session['user_name'] = 'Admin Principal'
+            session.permanent = True
+            return redirect(url_for('index'))
 
+        # Verificar usuario en DB
         cur.execute('SELECT AdminId, UserName, EncryptedPassword FROM admins WHERE email = %s', (_email,))
         admin = cur.fetchone()
-        print(session)
-        if admin:
-            if check_password_hash(admin[2], _pass):
-                session['id'] = admin[0]
-                session['role'] = 'admin'
-                user_name = [admin[1]]
-                return render_template("home.html", user_name=user_name, session=session)
-            else:
-                return render_template("users/login.html", mensaje1="Contraseña incorrecta")
-
+        
+        if admin and check_password_hash(admin[2], _pass):
+            session['id'] = admin[0]
+            session['role'] = 'admin'
+            session['user_name'] = admin[1]
+            session.permanent = True
+            return redirect(url_for('index'))
+        
         cur.execute('SELECT CompanyId, name, EncryptedPasswdC FROM companies WHERE email = %s', (_email,))
         company = cur.fetchone()
-        print(session)
-        if company != None:
-            print("entre aqui al company")
-            if check_password_hash(company[2], _pass):
-                session['id'] = company[0]
-                session['role'] = 'company'
-                user_name = [company[1]]
-                return render_template("home.html", user_name=user_name, session=session)
-            else:
-                return render_template("users/login.html", mensaje1="Contraseña incorrecta")
-
-        print(session)
+        
+        if company and check_password_hash(company[2], _pass):
+            session['id'] = company[0]
+            session['role'] = 'company'
+            session['user_name'] = company[1]
+            session.permanent = True
+            return redirect(url_for('index'))
+        
         cur.execute('SELECT ApplicantId, UserName, EncryptedPasswdA, name FROM applicants WHERE email = %s', (_email,))
         applicant = cur.fetchone()
-        print(applicant)
-        print(applicant[2])
-        if applicant:
-            print("entre aqui al applicant")
-            if check_password_hash(applicant[2], _pass):
-                session['id'] = applicant[0]
-                session['role'] = 'applicant'
-                user_name = [applicant[3]]
-                return render_template("home.html", user_name=user_name, session=session)
-            else:
-                return render_template("users/login.html", mensaje1="Contraseña incorrecta")
+        
+        if applicant and check_password_hash(applicant[2], _pass):
+            session['id'] = applicant[0]
+            session['role'] = 'applicant'
+            session['user_name'] = applicant[3]
+            session.permanent = True
+            return redirect(url_for('index'))
+        
+        return render_template("users/login.html", mensaje1="Usuario o contraseña incorrectos")
 
-        return render_template("users/login.html", mensaje1="Usuario no encontrado")
 
-    return render_template("users/login.html", mensaje1="Ingrese su correo y contraseña")
+
+@app.route('/logout')
+def logout():
+    session.clear()  
+    return redirect(url_for('login'))
 
 
 def get_disabilities():
     cur = cdb.cursor
-    cur.execute("SELECT disabilityid, name FROM disabilities")  # Ajusta la consulta
+    cur.execute("SELECT disabilityid, name FROM disabilities")  
     opciones = cur.fetchall()
     return opciones
+
 
 @app.route('/register')
 def register():
   disabilities1 = get_disabilities()
   return render_template('users/register.html', disabilities=disabilities1)
-
-
 
 
 @app.route('/registerProcess', methods=['GET', 'POST'])
@@ -260,7 +244,33 @@ def download_pdf(file_id):
         as_attachment=True
     )
 
-    
+
+@app.route('/myProfile')
+def myProfile():
+    if session['role'] == 'company':
+        cur = cdb.cursor
+        cur.execute('SELECT * FROM companies WHERE CompanyId = %s', (session['id'],))
+        company = cur.fetchone()
+        return render_template('users/companyProfile.html', company=company)
+    elif session['role'] == 'applicant':
+        cur = cdb.cursor
+        cur.execute('SELECT * FROM applicants WHERE ApplicantId = %s', (session['id'],))
+        applicant = cur.fetchone()
+        return render_template('users/applicantProfile.html', applicant=applicant)
+    elif session['role'] == 'admin':
+        cur = cdb.cursor
+        cur.execute('SELECT * FROM admins WHERE AdminId = %s', (session['id'],))
+        admin = cur.fetchone()
+        return render_template('users/adminProfile.html', admin=admin)
+    else:
+        return redirect(url_for('login'))
+
+@app.before_request
+def load_session():
+    g.user = session.get('user_name')
+
+
+
 
 """@app.route('/logout')
 def logout():

@@ -1,6 +1,6 @@
 [project]
 name = "apex_csl"
-version = "0.1.46"
+version = "0.1.5"
 description = """A Python package for the Apex: "Camino sin Límites" project."""
 authors = [
     { name = "Daniel Tenorio", email = "danyjr@outlook.es" },
@@ -17,7 +17,9 @@ dependencies = [
     "flask-wtf",
     "flask-login",
     "datetime",
-    "pymysql"
+    "pymysql",
+    "flask_session",
+    "redis",
 ]
 
 [tool.setuptools.packages.find]
