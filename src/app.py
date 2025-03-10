@@ -50,12 +50,7 @@ def viewCompanies():
     companies = cur.fetchall()
     return render_template('applicants/viewCompanies.html', companies=companies)
 
-@app.route('/viewApplicants')
-def viewApplicants():
-  cur = cdb.cursor
-  cur.execute('SELECT ApplicantId, UserName, Name, FirstName, SecName, Email, Age, Phone, Address, State, Municipaly, Cv_Name, EmergencyContact, Related, DisabilityId FROM applicants')
-  applicants = cur.fetchall()
-  return render_template('admins/viewApplicants.html', applicants=applicants)
+
 
 @app.route('/viewVacancies')
 def viewVacancies():
@@ -385,13 +380,23 @@ def delete_admin(admin_id):
     cdb.conection.commit()
     return redirect(url_for('viewAdmins'))
 
+
+@app.route('/viewApplicants')
+def viewApplicants():
+  cur = cdb.cursor
+  cur.execute('SELECT ApplicantId, UserName, Name, FirstName, SecName, Email, Age, Phone, Address, State, Municipaly, Cv_Name, EmergencyContact, Related, DisabilityId FROM applicants')
+  applicants = cur.fetchall()
+  return render_template('admins/viewApplicants.html', applicants=applicants)
+
 @app.route('/details_applicant/<int:applicant_id>')
 def details_applicant(applicant_id):
     cur = cdb.cursor
     cur.execute('SELECT * FROM applicants WHERE ApplicantID = %s', (applicant_id,))
     applicant = cur.fetchone()
+    cur.execute('SELECT * FROM disabilities WHERE DisabilityID = %s', (applicant[16],))
+    disabilities = cur.fetchone() 
     if applicant:
-        return render_template('applicants/detailsApplicant.html', applicant=applicant)
+        return render_template('applicants/detailsApplicant.html', applicant=applicant, disabilities=disabilities)
     else:
         return "Applicant not found", 404
 
@@ -400,8 +405,9 @@ def editApplicantForm(applicant_id):
     cur = cdb.cursor
     cur.execute('SELECT * FROM applicants WHERE ApplicantID = %s', (applicant_id,))
     applicant = cur.fetchone()
+    disabilities = get_disabilities()
     if applicant:
-        return render_template('applicants/editApplicant.html', applicant=applicant)
+        return render_template('applicants/editApplicant.html', applicant=applicant, disabilities=disabilities)
     else:
         return "Applicant not found", 404
 
