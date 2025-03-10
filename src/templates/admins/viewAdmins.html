@@ -1,5 +1,25 @@
 {% extends "index.html" %}
 
 {% block content %}
-admins
+<table>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th> </th>
+            <th> </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for admin in admins %}
+            <tr>
+                <td>{{ admins.[1] }}</td>
+                <td>{{ admin.[2] }}</td>
+                <td><a href="{{ path_for('editAdmin', {'id': usuario.id}) }}">Editar</a></td>
+                <td><a href="{{ path_for('deleteAdmin', {'id': usuario.id}) }}">Eliminar</a></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 {% endblock %}

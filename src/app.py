@@ -37,7 +37,10 @@ def login():
 
 @app.route('/viewAdmins')
 def viewAdmins():
-  return render_template('admins/viewAdmins.html')
+  cur = cdb.cursor
+  cur.execute('SELECT AdminID, Username, Email FROM admins')
+  admins = cur.fetchall()
+  return render_template('admins/viewAdmins.html', admins=admins)
 
 @app.route('/viewCompanies')
 def viewCompanies():
