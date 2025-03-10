@@ -129,6 +129,48 @@ def get_disabilities():
     return opciones
 
 
+@app.route('/viewDisabilities')
+def viewDisabilities():
+    cur = cdb.cursor
+    cur.execute('SELECT * FROM disabilities')
+    disabilities = cur.fetchall()
+
+    return render_template('admins/viewDisabilities.html', disabilities= disabilities)
+
+
+@app.route('/editDisabilityForm/<int:disability_id>', methods=['GET', 'POST'])
+def editDisabilityForm(disability_id):
+    cur = cdb.cursor
+    cur.execute('SELECT * FROM disabilities WHERE DisabilityId = %s', (disability_id,))
+    disability = cur.fetchone()
+    if disability:
+        return render_template('admins/editDisability.html', disability=disability)
+    else:
+        return "Disability not found", 404
+    
+@app.route('/edit_disability/<int:disability_id>', methods=['GET', 'POST'])
+def edit_disability(disability_id):
+    cur = cdb.cursor
+    if request.method == 'POST':
+        _name = request.form['name']
+        _category = request.form['category']
+        _description = request.form['description']
+        
+        
+        cur.execute('UPDATE disabilities SET name=%s, category=%s, description=%s WHERE DisabilityId=%s',
+                    (_name, _category, _description ,disability_id))
+        cdb.conection.commit()
+        return redirect(url_for('viewDisabilities'))
+    
+
+@app.route('/delete_disability/<int:disability_id>', methods=['get'])
+def delete_disability(disability_id):
+    cur = cdb.cursor
+    cur.execute('DELETE FROM disabilities WHERE DisabilityId = %s', (disability_id,))
+    cdb.conection.commit()
+    return redirect(url_for('viewDisabilities'))
+
+
 @app.route('/register')
 def register():
   disabilities1 = get_disabilities()
