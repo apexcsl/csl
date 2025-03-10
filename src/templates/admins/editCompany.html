@@ -10,7 +10,7 @@
       <td>{{ company[0] }}</td>
     </tr>
     <tr>
-      <th>Name</th>
+      <th>Nombre</th>
       <td><input type="text" name="name" value="{{ company[1] }}"></td>
     </tr>
     <tr>
@@ -18,23 +18,23 @@
       <td><input type="email" name="email" value="{{ company[2] }}"></td>
     </tr>
     <tr>
-      <th>Phone</th>
+      <th>Telefono</th>
       <td><input type="text" name="phone" value="{{ company[4] }}"></td>
     </tr>
     <tr>
-      <th>Address</th>
+      <th>Dirección</th>
       <td><input type="text" name="address" value="{{ company[5] }}"></td>
     </tr>
     <tr>
-      <th>State</th>
+      <th>Estado</th>
       <td><input type="text" name="state" value="{{ company[6] }}"></td>
     </tr>
     <tr>
-      <th>Municipality</th>
+      <th>Municipio</th>
       <td><input type="text" name="municipality" value="{{ company[7] }}"></td>
     </tr>
     <tr>
-      <th>Description</th>
+      <th>Descripción</th>
       <td><textarea name="description">{{ company[8] }}</textarea></td>
     </tr>
     <tr>
@@ -50,7 +50,7 @@
       <td>{{ company[12] }}</td>
     </tr>
   </table>
-  <button type="submit">Save Changes</button>
+  <button type="submit">Guardar Cambios</button>
 </form>
-<a href="{{ url_for('viewCompanies') }}">Back to Companies</a>
+<a href="{{ url_for('viewCompanies') }}">Regresar a Compañias</a>
 {% endblock %}

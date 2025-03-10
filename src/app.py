@@ -52,7 +52,10 @@ def viewCompanies():
 
 @app.route('/viewApplicants')
 def viewApplicants():
-  return render_template('admins/viewApplicants.html')
+  cur = cdb.cursor
+  cur.execute('SELECT ApplicantId, UserName, Name, FirstName, SecName, Email, Age, Phone, Address, State, Municipaly, Cv_Name, EmergencyContact, Related, DisabilityId FROM applicants')
+  applicants = cur.fetchall()
+  return render_template('admins/viewApplicants.html', applicants=applicants)
 
 @app.route('/viewVacancies')
 def viewVacancies():
@@ -150,7 +153,6 @@ def registerAccess():
     return render_template("users/register.html", mensaje="Por favor, llene todos los campos")
 
 
-
 @app.route('/registerProcessApplicants', methods=['GET', 'POST'])
 def registerAccessAppli():
     if request.method == 'POST':
@@ -178,9 +180,6 @@ def registerAccessAppli():
             cur.execute('INSERT INTO applicants (username, name, firstname, secname, email, encryptedpasswda, age, phone, address, state, municipaly, Cv_Name, Cv_Data, emergencycontact, related, disabilityid) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
                         (_username, _name, _secname, _firstname, _email, generate_password_hash(_pass), _age, _phone, _address, _state, _municipaly, cv.filename, _cv_data, _emergencyc, _related, _disabilityid))
             
-            """cur.execute('INSERT INTO applicants (username, name, firstname, secname, email, encryptedpasswda, age, phone, address, state, municipaly, emergencycontact, related, disabilityid) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
-                        (_username, _name, _firstname, _secname,  _email, generate_password_hash(_pass), _age, _phone, _address, _state, _municipaly, _emergencyc, _related, _disabilityid))"""
-            
             cdb.conection.commit()
             return render_template("users/login.html", mensaje="Usuario registrado con éxito")
         else:
@@ -188,8 +187,6 @@ def registerAccessAppli():
             return render_template("users/register.html", mensaje="El usuario ya existe")
     print("Por favor, llene todos los campos")
     return render_template("users/register.html", mensaje="Por favor, llene todos los campos")
-
-
 
 
 @app.route('/registerProcessCompanies', methods=['GET', 'POST'])
@@ -226,7 +223,6 @@ def registerAccessCompanies():
         
     print("Por favor, llene todos los campos")        
     return render_template("users/register.html", mensaje1="Por favor, llene todos los campos")
-    
 
 
 def verifyRegisterData(email, rfc=None):
@@ -304,7 +300,7 @@ def details_company(company_id):
     company = cur.fetchone()
     if company:
         imagen_base64 = base64.b64encode(company[10]).decode('utf-8')
-        return render_template('companies/detailsCompany.html', company=company, imagen_base64=imagen_base64)
+        return render_template('applicants/detailsCompany.html', company=company, imagen_base64=imagen_base64)
     else:
         return "Company not found", 404
 
@@ -316,7 +312,7 @@ def editCompanyForm(company_id):
     company = cur.fetchone()
     if company:
         imagen_base64 = base64.b64encode(company[10]).decode('utf-8')
-        return render_template('companies/editCompany.html', company=company, imagen_base64=imagen_base64)
+        return render_template('admins/editCompany.html', company=company, imagen_base64=imagen_base64)
     else:
         return "Company not found", 404
 
@@ -353,14 +349,100 @@ def delete_company(company_id):
     return redirect(url_for('viewCompanies'))
 
 
-"""@app.route('/logout')
-def logout():
+@app.route('/editAdminForm/<int:admin_id>', methods=['GET', 'POST'])
+def editAdminForm(admin_id):
+    cur = cdb.cursor
+    cur.execute('SELECT * FROM admins WHERE AdminId = %s', (admin_id,))
+    admin = cur.fetchone()
+    if admin:
+        return render_template('admins/editAdmin.html', admin=admin)
+    else:
+        return "Admin not found", 404
 
-    session.pop('username', None)
-    session.pop('logueado', None)
-    session.pop('id', None)
-    return render_template('login.html')
-"""
+@app.route('/edit_admin/<int:admin_id>', methods=['GET', 'POST'])
+def edit_admin(admin_id):
+    cur = cdb.cursor
+    if request.method == 'POST':
+        _name = request.form['name']
+        _email = request.form['email']
+        
+        cur.execute('UPDATE admins SET Username=%s, Email=%s WHERE AdminID=%s',
+                    (_name, _email, admin_id))
+        cdb.conection.commit()
+        return redirect(url_for('viewAdmins'))
+    
+    cur.execute('SELECT * FROM admins WHERE AdminID = %s', (admin_id,))
+    admin = cur.fetchone()
+    if admin:
+        return render_template('admins/editAdmin.html', admin=admin)
+    else:
+        return "Admin not found", 404
+
+@app.route('/delete_admin/<int:admin_id>', methods=['get'])
+def delete_admin(admin_id):
+    cur = cdb.cursor
+    cur.execute('DELETE FROM admins WHERE AdminID = %s', (admin_id,))
+    cdb.conection.commit()
+    return redirect(url_for('viewAdmins'))
+
+@app.route('/details_applicant/<int:applicant_id>')
+def details_applicant(applicant_id):
+    cur = cdb.cursor
+    cur.execute('SELECT * FROM applicants WHERE ApplicantID = %s', (applicant_id,))
+    applicant = cur.fetchone()
+    if applicant:
+        return render_template('applicants/detailsApplicant.html', applicant=applicant)
+    else:
+        return "Applicant not found", 404
+
+@app.route('/editApplicantForm/<int:applicant_id>', methods=['GET', 'POST'])
+def editApplicantForm(applicant_id):
+    cur = cdb.cursor
+    cur.execute('SELECT * FROM applicants WHERE ApplicantID = %s', (applicant_id,))
+    applicant = cur.fetchone()
+    if applicant:
+        return render_template('applicants/editApplicant.html', applicant=applicant)
+    else:
+        return "Applicant not found", 404
+
+@app.route('/edit_applicant/<int:applicant_id>', methods=['GET', 'POST'])
+def edit_applicant(applicant_id):
+    cur = cdb.cursor
+    if request.method == 'POST':
+        _username = request.form['username']
+        _name = request.form['name']
+        _firstname = request.form['firstname']
+        _secname = request.form['secname']
+        _email = request.form['email']
+        _age = request.form['age']
+        _phone = request.form['phone']
+        _address = request.form['address']
+        _state = request.form['state']
+        _municipaly = request.form['municipality']
+        _emergencyc = request.form['emergencyc']
+        _related = request.form['related']
+        _disabilityid = request.form['disability']
+        
+        cur.execute('UPDATE applicants SET username=%s, name=%s, firstname=%s, secname=%s, email=%s, age=%s, phone=%s, address=%s, state=%s, municipaly=%s, emergencyc=%s, related=%s, disabilityid=%s WHERE ApplicantID=%s',
+                    (_username, _name, _firstname, _secname, _email, _age, _phone, _address, _state, _municipaly, _emergencyc, _related, _disabilityid, applicant_id))
+        cdb.conection.commit()
+        return redirect(url_for('viewApplicants'))
+    
+    cur.execute('SELECT * FROM appplicants WHERE ApplicantId = %s', (applicant_id,))
+    applicant = cur.fetchone()
+    if applicant:
+        return render_template('applicants/editApplicant.html', applicant=applicant)
+    else:
+        return "Applicant not found", 404
+
+@app.route('/delete_applicant/<int:applicant_id>', methods=['get'])
+def delete_applicant(applicant_id):
+    cur = cdb.cursor
+    cur.execute('DELETE FROM applicants WHERE ApplicantID = %s', (applicant_id,))
+    cdb.conection.commit()
+    return redirect(url_for('viewApplicants'))
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

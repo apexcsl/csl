@@ -1,0 +1,61 @@
+{% extends "index.html" %}
+
+{% block content %}
+<h2>Editar Solicitantes Detalles</h2>
+<form method="post" action="/edit_applicant/{{ applicant[0] }}" enctype="multipart/form-data">
+
+  <table>
+    <tr>
+      <th>ID</th>
+      <td>{{ applicant[0] }}</td>
+    </tr>
+    <tr>
+      <th>Usuario</th>
+      <td><input type="text" name="username" value="{{ applicant[1] }}"></td>
+    </tr>
+    <tr>
+      <th>Nombre</th>
+      <td><input type="text" name="name" value="{{ applicant[2] }}"></td>
+    </tr>
+    <tr>
+      <th>Primer Apellido</th>
+      <td><input type="text" name="firstname" value="{{ applicant[3] }}"></td>
+    </tr>
+    <tr>
+      <th>Segundo Apellido</th>
+      <td><input type="text" name="secname" value="{{ applicant[4] }}"></td>
+    </tr>
+    <tr>
+      <th>Correo</th>
+      <td><input type="email" name="email" value="{{ applicant[5] }}"></td>
+    </tr>
+    <tr>
+        <th>Edad</th>
+        <td><input type="number" name="age" value="{{ applicant[7] }}"></td>
+    </tr>
+    <tr>
+      <th>Telefono</th>
+      <td><input type="text" name="phone" value="{{ applicant[8] }}"></td>
+    </tr>
+    <tr>
+      <th>Dirección</th>
+      <td><input type="text" name="address" value="{{ applicant[9] }}"></td>
+    </tr>
+    <tr>
+      <th>Estado</th>
+      <td><input type="text" name="state" value="{{ applicant[10] }}"></td>
+    </tr>
+    <tr>
+      <th>Municipio</th>
+      <td><input type="text" name="municipality" value="{{ applicant[11] }}"></td>
+    </tr>
+    
+    <tr>
+        <th>Uploaded At</th>
+        <td>{{ applicant[17] }}</td>
+      </tr>
+    </table>
+    <button type="submit">Guardar Cambios</button>
+  </form>
+<a href="{{ url_for('viewApplicants') }}">Regresar a Applicantes</a>
+{% endblock %}

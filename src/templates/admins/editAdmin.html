@@ -1,0 +1,28 @@
+{% extends "index.html" %}
+
+{% block content %}
+<h2>Editar Admin Detalles</h2>
+<form method="post" action="/edit_admin/{{ admin[0] }}" enctype="multipart/form-data">
+
+  <table>
+    <tr>
+      <th>ID</th>
+      <td>{{ admin[0] }}</td>
+    </tr>
+    <tr>
+      <th>Nombre</th>
+      <td><input type="text" name="name" value="{{ admin[1] }}"></td>
+    </tr>
+    <tr>
+      <th>Email</th>
+      <td><input type="email" name="email" value="{{ admin[2] }}"></td>
+    </tr>
+    <tr>
+      <th>Uploaded At</th>
+      <td>{{ admin[4] }}</td>
+    </tr>
+  </table>
+  <button type="submit">Guardar Cambios</button>
+</form>
+<a href="{{ url_for('viewCompanies') }}">Regresar a Administradores</a>
+{% endblock %}

@@ -1,25 +1,29 @@
-{% extends "index.html" %}
-
-{% block content %}
+{% extends "index.html" %} {% block content %}
+<h2>Admins</h2>
 <table>
     <thead>
         <tr>
+            <th>ID</th>
             <th>Nombre</th>
             <th>Email</th>
-            <th> </th>
-            <th> </th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
         {% for admin in admins %}
             <tr>
-                <td>{{ admins.[1] }}</td>
-                <td>{{ admin.[2] }}</td>
-                <td><a href="{{ path_for('editAdmin', {'id': usuario.id}) }}">Editar</a></td>
-                <td><a href="{{ path_for('deleteAdmin', {'id': usuario.id}) }}">Eliminar</a></td>
+                <td>{{ admin[0] }}</td>
+                <td>{{ admin[1] }}</td>
+                <td>{{ admin[2] }}</td>
+                <td>
+                    <a href="{{ url_for('editAdminForm', admin_id=admin[0]) }}">Editar</a>
+                    <a href="{{ url_for('delete_admin', admin_id=admin[0])  }}">Eliminar</a>
+                </td>
             </tr>
         {% endfor %}
     </tbody>
 </table>
+
+<a href="{{ url_for('home') }}">Regresar a Menu</a>
 
 {% endblock %}
