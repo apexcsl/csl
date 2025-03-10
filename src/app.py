@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, s
 from werkzeug.security import generate_password_hash, check_password_hash
 from db.database import CDB
 
+import base64
 from config import config
 from mediaUploader import *
 
@@ -18,7 +19,7 @@ app.config.from_object('config.DevelopmentConfig')
 app.config['SESSION_TYPE'] = 'filesystem'  
 app.config['SESSION_PERMANENT'] = True     
 app.config['SESSION_USE_SIGNER'] = True    
-app.config['PERMANENT_SESSION_LIFETIME'] = 259200  
+app.config['PERMANENT_SESSION_LIFETIME'] = 900  
   
 
 
@@ -44,7 +45,10 @@ def viewAdmins():
 
 @app.route('/viewCompanies')
 def viewCompanies():
-  return render_template('applicants/viewCompanies.html')
+    cur = cdb.cursor
+    cur.execute('SELECT CompanyId, Name, Email, Phone, Address, State, Municipaly, Description, RFC, Logo, Type, uploaded_at FROM companies')
+    companies = cur.fetchall()
+    return render_template('applicants/viewCompanies.html', companies=companies)
 
 @app.route('/viewApplicants')
 def viewApplicants():
@@ -293,7 +297,60 @@ def myProfile():
 def load_session():
     g.user = session.get('user_name')
 
+@app.route('/details_company/<int:company_id>')
+def details_company(company_id):
+    cur = cdb.cursor
+    cur.execute('SELECT * FROM companies WHERE CompanyId = %s', (company_id,))
+    company = cur.fetchone()
+    if company:
+        imagen_base64 = base64.b64encode(company[10]).decode('utf-8')
+        return render_template('companies/detailsCompany.html', company=company, imagen_base64=imagen_base64)
+    else:
+        return "Company not found", 404
 
+
+@app.route('/editCompanyForm/<int:company_id>', methods=['GET', 'POST'])
+def editCompanyForm(company_id):
+    cur = cdb.cursor
+    cur.execute('SELECT * FROM companies WHERE CompanyId = %s', (company_id,))
+    company = cur.fetchone()
+    if company:
+        imagen_base64 = base64.b64encode(company[10]).decode('utf-8')
+        return render_template('companies/editCompany.html', company=company, imagen_base64=imagen_base64)
+    else:
+        return "Company not found", 404
+
+@app.route('/edit_company/<int:company_id>', methods=['GET', 'POST'])
+def edit_company(company_id):
+    cur = cdb.cursor
+    if request.method == 'POST':
+        _name = request.form['name']
+        _email = request.form['email']
+        _phone = request.form['phone']
+        _address = request.form['address']
+        _state = request.form['state']
+        _municipaly = request.form['municipality']
+        _description = request.form['description']
+        _rfc = request.form['rfc']
+        
+        cur.execute('UPDATE companies SET name=%s, email=%s, phone=%s, address=%s, state=%s, municipaly=%s, description=%s, rfc=%s WHERE CompanyId=%s',
+                    (_name, _email, _phone, _address, _state, _municipaly, _description, _rfc, company_id))
+        cdb.conection.commit()
+        return redirect(url_for('viewCompanies'))
+    
+    cur.execute('SELECT * FROM companies WHERE CompanyId = %s', (company_id,))
+    company = cur.fetchone()
+    if company:
+        return render_template('companies/editCompany.html', company=company)
+    else:
+        return "Company not found", 404
+
+@app.route('/delete_company/<int:company_id>', methods=['get'])
+def delete_company(company_id):
+    cur = cdb.cursor
+    cur.execute('DELETE FROM companies WHERE CompanyId = %s', (company_id,))
+    cdb.conection.commit()
+    return redirect(url_for('viewCompanies'))
 
 
 """@app.route('/logout')

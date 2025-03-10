@@ -917,3 +917,78 @@ nav {
 .profile-dropdown a:hover {
   background-color: #f0f0f0;
 }
+
+
+table {
+  width: 90%;
+  border-collapse: collapse;
+  margin: 50px auto;
+  font-size: 1em;
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--white);
+}
+
+table thead tr {
+  background-color: var(--primary-color);
+  color: var(--text-title);
+  text-align: left;
+  font-weight: bold;
+}
+
+table th, table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+}
+
+table tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+
+table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+table tbody tr:last-of-type {
+  border-bottom: 2px solid var(--primary-color);
+}
+
+table a {
+  color: var(--text-title);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+table a:hover {
+  color: var(--primary-color);
+}
+
+
+/* Styles for role buttons */
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 10px 5px;
+  background-color: var(--color-primario);
+  color: var(--color-secundario);
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.btn a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background-color: var(--color-secundario);
+  color: var(--color-primario);
+}
+
+.btn a:hover {
+  color: var(--color-primario);
+}

@@ -1,5 +1,29 @@
-{% extends "index.html" %}
+{% extends "index.html" %} {% block content %}
+<h2>Companies</h2>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Address</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for company in companies %}
+    <tr>
+      <td>{{ company[0] }}</td>
+      <td>{{ company[2] }}</td>
+      <td>{{ company[3] }}</td>
+      <td>
 
-{% block content %}
-companies
+        <a href="{{ url_for('details_company', company_id=company[0]) }}">Details</a>
+        <a href="{{ url_for('editCompanyForm', company_id=company[0]) }}">Edit</a>
+        <a href="{{ url_for('delete_company', company_id=company[0]) }}">Delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
 {% endblock %}

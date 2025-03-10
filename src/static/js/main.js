@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
           profileDropdown.style.display = profileDropdown.style.display === "block" ? "none" : "block";
       });
 
-      // Cierra el menú si el usuario hace clic fuera de él
+
       document.addEventListener("click", function (event) {
           if (!profileBtn.contains(event.target) && !profileDropdown.contains(event.target)) {
               profileDropdown.style.display = "none";
