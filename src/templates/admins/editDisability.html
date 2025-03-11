@@ -1,0 +1,29 @@
+{% extends "index.html" %}
+
+{% block content %}
+<h2>Editar Discapacidad</h2>
+<form method="post" action="/edit_disability/{{ disability[0] }}" enctype="multipart/form-data">
+  <table>
+    <tr>
+      <th>ID</th>
+      <td>{{ disability[0] }}</td>
+    </tr>
+    <tr>
+      <th>Nombre</th>
+      <td><input type="text" name="name" value="{{ disability[2] }}"></td>
+    </tr>
+    <tr>
+      <th>Categoria</th>
+      <td><input type="text" name="category" value="{{ disability[1] }}"></td>
+    </tr>
+    <tr>
+      <th>Descripcion</th>
+      <td><input type="text" name="description" value="{{ disability[3] }}"></td>
+    </tr>
+    
+
+  </table>
+  <button type="submit">Guardar Cambios</button>
+</form>
+<a href="{{ url_for('viewDisabilities') }}">Regresar a Discapacidades</a>
+{% endblock %}

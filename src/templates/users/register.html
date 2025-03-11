@@ -88,6 +88,10 @@
                                 <input type="text" class="input-field" id="related" name="related" placeholder="Parentezco" required>
                         </div>
                         
+                        <div class="input-box">
+                                <input type="file" class="input-field" id="logo" name="phtoto" placeholder="Profile Photo" required>
+                        </div>
+
                         <select name="disability" id="disability" class="input-field">
                                 <option value="">-- Seleccionar discapacidad --</option>
                                 {% for disability in disabilities %}
@@ -161,9 +165,6 @@
                                 <input type="text" class="input-field" id="rfc" name="rfc" placeholder="RFC" required>
                         </div>
 
-                        <div class="input-box">
-                                <input type="file" class="input-field" id="logo" name="logo" placeholder="Logo" required>
-                        </div>
 
                         <!-- <div class="forgot">
                                 <section>
@@ -186,7 +187,7 @@
 
 <div id="content3" class="content">
         <div class="login-box">
-                <form action="/registerProcess" method="post">
+                <form action="/registerProcess" method="post" enctype="multipart/form-data">
                         
                         <div class="login-header">
                                 <header>Administradores</header>
@@ -201,6 +202,10 @@
 
                         <div class="input-box">
                         <input type="email" class="input-field" id="email" name="email" placeholder="Email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address">
+                        </div>
+
+                        <div class="input-box">
+                                <input type="file" class="input-field" id="logo" name="photo" placeholder="Profile Photo" required>
                         </div>
 
                         <div class="input-box">

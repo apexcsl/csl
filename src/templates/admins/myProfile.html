@@ -1,0 +1,88 @@
+{% extends 'index.html' %} {% block content %}
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .navbar {
+      background-color: #007bff;
+      padding: 10px;
+      display: flex;
+      justify-content: space-around;
+    }
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      padding: 10px;
+    }
+    .navbar a:hover {
+      text-decoration: underline;
+    }
+    .d-flex {
+      display: flex;
+      height: calc(100vh - 50px);
+    }
+    .sidebar {
+      width: 250px;
+      background-color: #343a40;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .sidebar a {
+      color: white;
+      display: block;
+      padding: 10px;
+      text-decoration: none;
+      width: 100%;
+      text-align: center;
+    }
+    .sidebar a:hover {
+      background-color: #495057;
+    }
+    .profile-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin-bottom: 20px;
+    }
+    .content {
+      flex: 1;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="#">Home</a>
+    <a href="#">Work</a>
+    <a href="#">Support</a>
+    <a href="#">Logout</a>
+  </nav>
+  <div class="d-flex">
+    <div class="sidebar">
+      <img src="{{ url_for('static', filename='images/profile.png') }}" alt="Profile Image" class="profile-img">
+      <h3>{{ session['user_name'] }}</h3>
+      <a href="#">Home</a>
+      <a href="#">Work</a>
+      <a href="#">Support</a>
+      <a href="#">Setting</a>
+      <a href="{{ url_for('logout') }}">Signout</a>
+    </div>
+    <div class="content">
+      <h2>About</h2>
+      <p><strong>Full Name:</strong> {{ admin[1] }}</p>
+      <p><strong>Email:</strong> {{ admin[2] }}</p>
+      <p><strong>Phone:</strong> {{ admin[3] }}</p>
+      <p><strong>Address:</strong> {{ admin[4] }}</p>
+      <hr>
+      <h2>Recent Projects</h2>
+      <p><strong>Project Name:</strong> Project Description</p>
+    </div>
+  </div>
+{% endblock %}

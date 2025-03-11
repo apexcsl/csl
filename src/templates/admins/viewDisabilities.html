@@ -1,0 +1,34 @@
+{% extends "index.html" %} 
+{% block content %}
+<h2>Discapacidades</h2>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Categoria</th>
+            <th>Descripcion</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for disabilities in disabilities %}
+            <tr>
+                <td>{{ disabilities[0] }}</td>
+                <td>{{ disabilities[2] }}</td>
+                <td>{{ disabilities[1] }}</td>
+                <td>{{ disabilities[3] }}</td>  
+                <td>
+                    <a href="{{ url_for('editDisabilityForm', disability_id=disabilities[0]) }}">Editar</a>
+                    <a href="{{ url_for('delete_disability', disability_id=disabilities[0]) }}">Eliminar</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ url_for('home') }}">Regresar a Menu</a>
+
+{% endblock %}
+
+
