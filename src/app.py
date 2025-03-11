@@ -178,11 +178,16 @@ def registerAccess():
         _name = request.form['name']
         _email = request.form['email']
         _pass = request.form['password']
+        photo = request.files['photo']
+
+
+        _photo = compressImage(photo)
+        _type = photo.mimetype
 
         cur = cdb.cursor
         if verifyRegisterData(_email):
-            cur.execute('INSERT INTO admins (username, email, encryptedpassword) VALUES (%s, %s, %s)',
-                        (_name, _email, generate_password_hash(_pass)))
+            cur.execute('INSERT INTO admins (username, email, profilePhoto, type, encryptedpassword) VALUES (%s, %s, %s, %s, %s)',
+                        (_name, _email, _photo, _type ,generate_password_hash(_pass)))
             cdb.conection.commit()
             return render_template("users/login.html", mensaje="Usuario registrado con éxito")
         else:
@@ -199,6 +204,9 @@ def registerAccessAppli():
         _firstname = request.form['firstname']
         _secname = request.form['secname']
         _email = request.form['email']
+        photo = request.files['photo']
+        _photo = compressImage(photo)
+        _type = photo.mimetype
         _pass = request.form['password']
         _age = request.form['age']
         _phone = request.form['phone']
@@ -214,8 +222,8 @@ def registerAccessAppli():
 
         cur = cdb.cursor
         if verifyRegisterData(_email):
-            cur.execute('INSERT INTO applicants (username, name, firstname, secname, email, encryptedpasswda, age, phone, address, state, municipaly, Cv_Name, Cv_Data, emergencycontact, related, disabilityid) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
-                        (_username, _name, _secname, _firstname, _email, generate_password_hash(_pass), _age, _phone, _address, _state, _municipaly, cv.filename, _cv_data, _emergencyc, _related, _disabilityid))
+            cur.execute('INSERT INTO applicants (username, name, firstname, secname, email, encryptedpasswda, photo, type, age, phone, address, state, municipaly, Cv_Name, Cv_Data, emergencycontact, related, disabilityid) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+                        (_username, _name, _secname, _firstname, _email, generate_password_hash(_pass), _photo, _type, _age, _phone, _address, _state, _municipaly, cv.filename, _cv_data, _emergencyc, _related, _disabilityid))
             
             cdb.conection.commit()
             return render_template("users/login.html", mensaje="Usuario registrado con éxito")
@@ -312,17 +320,20 @@ def myProfile():
         cur = cdb.cursor
         cur.execute('SELECT * FROM companies WHERE CompanyId = %s', (session['id'],))
         company = cur.fetchone()
+        imagen_base64 = base64.b64encode(company[10]).decode('utf-8')
         return render_template('users/companyProfile.html', company=company)
     elif session['role'] == 'applicant':
         cur = cdb.cursor
         cur.execute('SELECT * FROM applicants WHERE ApplicantId = %s', (session['id'],))
         applicant = cur.fetchone()
+        imagen_base64 = base64.b64encode(applicant[7]).decode('utf-8')
         return render_template('users/applicantProfile.html', applicant=applicant)
     elif session['role'] == 'admin':
         cur = cdb.cursor
         cur.execute('SELECT * FROM admins WHERE AdminId = %s', (session['id'],))
         admin = cur.fetchone()
-        return render_template('users/adminProfile.html', admin=admin)
+        imagen_base64 = base64.b64encode(admin[4]).decode('utf-8')
+        return render_template('users/adminProfile.html', admin=admin, imagen_base64=imagen_base64)
     else:
         return redirect(url_for('login'))
 
