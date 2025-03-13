@@ -1,0 +1,73 @@
+{% extends "index.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="tablas.css">
+
+<section class="table">
+  <div class="table__header">
+    <h1>details company</h1>
+  </div>
+  <div class="table__body">
+    <table border="1">
+       {%if session['role'] == 'superadmin' or session['role'] == 'admin' %}
+        <thead>
+            <tr>
+              <th >Logo</th>
+              <th colspan="2" >Date</th>
+           </tr>
+        </thead>
+        
+        <tbody>
+          <tr>
+            <td rowspan="10"><img src="data:image/png;base64,{{ imagen_base64 }}" alt="Company Logo" style="width: 10rem; height: 10rem;"></td>
+            <th>ID</th>
+            <td>{{ company[0] }}</td>
+        </tr>
+        <tr>
+            <th>Nombre</th>
+            <td>{{ company[1] }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{ company[2] }}</td>
+          </tr>
+          <tr>
+            <th>Telefono</th>
+            <td>{{ company[4] }}</td>
+          </tr>
+          <tr>
+            <th>Dirección</th>
+            <td>{{ company[5] }}</td>
+          </tr>
+          <tr>
+            <th>Estado</th>
+            <td>{{ company[6] }}</td>
+          </tr>
+          <tr>
+            <th>Municipio</th>
+            <td>{{ company[7] }}</td>
+          </tr>
+          <tr>
+            <th>Descripción</th>
+            <td>{{ company[8] }}</td>
+          </tr>
+          {%if session['role'] == 'superadmin' or session['role'] == 'admin' %}
+          <tr>
+            <th>RFC</th>
+            <td>{{ company[9] }}</td>
+          </tr>
+          {% endif %}
+          {%if session['role'] == 'superadmin' or session['role'] == 'admin' %}
+          <tr>
+            <th>Uploaded At</th>
+            <td>{{ company[12] }}</td>
+          </tr>
+          {% endif %}
+        </tbody>
+    </table>
+  </div>
+
+</section>
+
+<a href="{{ url_for('viewCompanies') }}">Regresar a Compañias</a>
+{% endblock %}

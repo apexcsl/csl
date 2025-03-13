@@ -1,0 +1,82 @@
+{% extends "index.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="tablas.css">
+
+<form method="post" action="/edit_company/{{ company[0] }}" enctype="multipart/form-data">
+<section class="table">
+  <div class="table__header">
+    <h1>Edit Company Details</h1>
+  </div>
+  <div class="table__body">
+    <table border="1">
+       {%if session['role'] == 'superadmin' or session['role'] == 'admin' %}
+        <thead>
+            <tr>
+              <th >Logo</th>
+              <th colspan="2" >Date</th>
+           </tr>
+        </thead>
+        
+        <tbody>
+          <tr>
+            <td rowspan="10"><img src="data:image/png;base64,{{ imagen_base64 }}" alt="Company Logo" style="width: 10rem; height: 10rem;"></td>
+            <th>ID</th>
+            <td>{{ company[0] }}</td>
+        </tr>
+        <tr>
+            <th>Nombre</th>
+            <td><input type="text" name="name" value="{{ company[1] }}"></td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td><input type="email" name="email" value="{{ company[2] }}"></td>
+          </tr>
+          <tr>
+            <th>Telefono</th>
+            <td><input type="text" name="phone" value="{{ company[4] }}"></td>
+
+          </tr>
+          <tr>
+            <th>Dirección</th>
+            <td><input type="text" name="address" value="{{ company[5] }}"></td>
+
+          </tr>
+          <tr>
+            <th>Estado</th>
+            <td><input type="text" name="state" value="{{ company[6] }}"></td>
+
+          </tr>
+          <tr>
+            <th>Municipio</th>
+            <td><input type="text" name="municipality" value="{{ company[7] }}"></td>
+
+          </tr>
+          <tr>
+            <th>Descripción</th>
+            <td><textarea name="description">{{ company[8] }}</textarea></td>
+
+          </tr>
+          {%if session['role'] == 'superadmin' or session['role'] == 'admin' %}
+          <tr>
+            <th>RFC</th>
+            <td><input type="text" name="rfc" value="{{ company[9] }}"></td>
+
+          </tr>
+          {% endif %}
+          {%if session['role'] == 'superadmin' or session['role'] == 'admin' %}
+          <tr>
+            <th>Uploaded At</th>
+            <td>{{ company[12] }}</td>
+          </tr>
+          {% endif %}
+        </tbody>
+    </table>
+  </div>
+
+</section>
+
+  <button type="submit">Guardar Cambios</button>
+</form>
+<a href="{{ url_for('viewCompanies') }}">Regresar a Compañias</a>
+{% endblock %}
