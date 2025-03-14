@@ -93,7 +93,7 @@ class CDB():
     #Funcion para crear la tabla Vacantes
     def createTableVacancies(self):
         try:
-            self.cursor.execute("CREATE TABLE IF NOT EXISTS Vacancies (VacancyID INT AUTO_INCREMENT PRIMARY KEY, CompanyID INT, DisavilityID INT, ApplicantID INT, Name VARCHAR(255), Description VARCHAR(255), Salary VARCHAR(255), State VARCHAR(255), Municipaly VARCHAR(255), Type VARCHAR(255), uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS Vacancies (VacancyID INT AUTO_INCREMENT PRIMARY KEY, CompanyID INT, DisabilityID INT, ApplicantID INT, Workposition VARCHAR(255), Description VARCHAR(255), Salary VARCHAR(255), State VARCHAR(255), Municipaly VARCHAR(255), NumberPosition INT, Type VARCHAR(255), uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
             print("\nTabla creada con éxito")
         except pymysql.Error as err:
             print(f"\nError al crear la tabla user: {err}")
@@ -113,18 +113,6 @@ class CDB():
             print("\nTabla creada con éxito")
         except pymysql.Error as err:
             print(f"\nError al crear la tabla user: {err}")
-    # Funcion para insertar un usuario predeterminado
-    def insertUser(self, username, email, password):
-        try:
-            self.cursor.execute("SELECT COUNT(*) FROM Admins WHERE Username = %s AND Email = %s", (username, email))
-            if self.cursor.fetchone()[0] == 0:
-                self.cursor.execute("INSERT INTO Admins (Username, Email, EncryptedPassword) VALUES (%s, %s, %s)", (username, email, password))
-                self.conection.commit()
-                print("Usuario insertado con éxito")
-            else:
-                print("El usuario ya existe")
-        except pymysql.Error as err:
-            print(f"\nError al insertar el usuario: {err}")
 
     #Funcion para insertar discapacidades
     def insertDisability(self, category, name, description):
@@ -149,7 +137,6 @@ class CDB():
             self.createTableVacancies()
             self.createTableVideos()
             self.createTableApproved()
-            self.insertUser('AdminP', 'admin@gmail.com', 'B!1w8NAt1T^%kvhUI*S^')
             datos = [
                 ('Fisica o Motora', 'Parálisis', 'Pérdida completa o parcial de la capacidad de movimiento de una o más partes del cuerpo debido a daño en el sistema nervioso o muscular.'),
                 ('Fisica o Motora', 'Amputaciones', 'Pérdida de una extremidad o parte del cuerpo, que afecta la movilidad y el uso de prótesis o adaptaciones.'),

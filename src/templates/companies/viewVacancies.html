@@ -1,5 +1,45 @@
-{% extends "index.html" %}
-
-{% block content %}
-vacantes
+{% extends "index.html" %} {% block content %}
+<h2>Vacantes</h2>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Salario</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for vacancy in vacancies %}
+    {% if session['role'] == 'superadmin' or session['role'] == 'admin' %}
+    <tr>
+      <td>{{ vacancy[0] }}</td>
+      <td>{{ vacancy[1] }}</td>
+      <td>{{ vacancy[2] }}</td>
+      <td>{{ vacancy[3] }}</td>
+      <td>
+        <a href="{{ url_for('details_vacancy', vacancy_id=vacancy[0]) }}">Detalles</a>
+        <a href="{{ url_for('editVacancyForm', vacancy_id=vacancy[0]) }}">Editar</a>
+        <a href="{{ url_for('delete_vacancy', vacancy_id=vacancy[0]) }}">Borrar</a>
+      </td>
+    </tr>
+    {% elif {{g.user}} == vacancy[1] %}
+    <tr>
+      <td>{{ vacancy[0] }}</td>
+      <td>{{ vacancy[1] }}</td>
+      <td>{{ vacancy[2] }}</td>
+      <td>{{ vacancy[3] }}</td>
+      <td>
+        <a href="{{ url_for('details_vacancy', vacancy_id=vacancy[0]) }}">Detalles</a>
+        <a href="{{ url_for('editVacancyForm', vacancy_id=vacancy[0]) }}">Editar</a>
+        <a href="{{ url_for('delete_vacancy', vacancy_id=vacancy[0]) }}">Borrar</a>
+      </td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{{ url_for('createVacancy') }}">Agregar Vacante</a>
+<a href="{{ url_for('home') }}">Regresar a Inicio</a>
 {% endblock %}

@@ -1,0 +1,62 @@
+{%extends "index.html"%} {%block content%}
+<h2>Agregar Vacante</h2>
+
+<form method="post" action="/createVacancy" enctype="multipart/form-data">
+  {% if mensaje1 %} 
+  {{mensaje1}}
+  {% endif %}
+  <table>
+    <tr>
+      <th>Nombre del Puesto</th>
+      <td><input type="text" name="name"></td>
+    </tr>
+    <tr>
+      <th>Descripción</th>
+      <td><textarea name="description"></textarea></td>
+    </tr>
+    <tr>
+      <th>Salario</th>
+      <td><input type="text" name="salary"></td>
+    </tr>
+    <tr>
+      <th>Empresa</th>
+      {%if session['role'] == 'superadmin' or session['role'] == 'admin' %}
+      <td>
+        <select name="company_id">
+          {% for company in companies %}
+          <option value="{{ company[0] }}">{{ company[1] }}</option>
+          {% endfor %}
+        </select>
+      </td>
+      {% else %}
+      <td>{{ g.user }}</td>
+      {% endif %}
+    </tr>
+    <tr>
+      <th>Estado</th>
+      <td><input type="text" name="state"></td>
+    </tr>
+    <tr>
+      <th>Municipio</th>
+      <td><input type="text" name="municipaly"></td>
+    </tr>
+    <tr>
+      <th>Numero de vacantes</th>
+      <td><input type="number" name="numbervacancy"></td>
+    </tr>
+    <tr>
+      <th>Discapacidad</th>
+      <td>
+        <select name="disability_id">
+          {% for disability in disabilities %}
+          <option value="{{ disability[0] }}">{{ disability[1] }}</option>
+          {% endfor %}
+        </select>
+      </td>
+    </tr>
+  </table>
+  <button type="submit">Agregar Vacante</button>
+  <a href="{{ url_for('viewVacancies') }}">Regresar a Vacantes</a>
+  <a href="{{ url_for('home') }}">Regresar a Inicio</a>
+</form>
+{%endblock%}

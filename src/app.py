@@ -51,11 +51,6 @@ def viewCompanies():
     return render_template('applicants/viewCompanies.html', companies=companies)
 
 
-
-@app.route('/viewVacancies')
-def viewVacancies():
-  return render_template('companies/viewVacancies.html')
-
 @app.route('/viewVideos')
 def viewVideos():
   return render_template('companies/viewVideos.html')
@@ -120,6 +115,13 @@ def logout():
 def get_disabilities():
     cur = cdb.cursor
     cur.execute("SELECT disabilityid, name FROM disabilities")  
+    opciones = cur.fetchall()
+    return opciones
+
+
+def get_companies():
+    cur = cdb.cursor
+    cur.execute("SELECT companyid, name FROM companies")  
     opciones = cur.fetchall()
     return opciones
 
@@ -489,6 +491,107 @@ def delete_applicant(applicant_id):
     cur.execute('DELETE FROM applicants WHERE ApplicantID = %s', (applicant_id,))
     cdb.conection.commit()
     return redirect(url_for('viewApplicants'))
+
+
+@app.route('/viewVacancies')
+def viewVacancies():
+  cur = cdb.cursor
+  cur.execute('SELECT * FROM vacancies')
+  vacancies = cur.fetchall()
+  return render_template('companies/viewVacancies.html', vacancies=vacancies)
+
+@app.route('/createVacancy')
+def createVacancy():
+    companies = get_companies()
+    disabilities = get_disabilities()
+    return render_template('companies/createVacancy.html', companies=companies, disabilities=disabilities)
+
+@app.route('/createVacancyProcess', methods=['GET', 'POST'])
+def createVacancyProcess():
+    if request.method == 'POST':
+        _companyid = request.form['company']
+        _disabilityid = request.form['disability']
+        _name = request.form['name']
+        _description = request.form['description']
+        _salary = request.form['salary']
+        _state = request.form['state']
+        _municipaly = request.form['municipality']
+        _numbervacancy = request.form['numbervacancy']
+        
+        cur = cdb.cursor
+        cur.execute('SELECT COUNT(*) FROM vacancies WHERE Position = %s AND CompanyID = %s', (_name, _companyid))
+        
+        if cur.fetchone()[0]>0:
+            cur.execute('INSERT INTO vacancies (CompanyID, DisabilityID, Workposition, Description, Salary, State, Municipaly, NumberPosition) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',
+                        (_companyid, _disabilityid, _name, _description, _salary, _state, _municipaly, _numbervacancy))
+            cdb.conection.commit()
+            return redirect(url_for('viewVacancies'))
+        else:
+            return render_template("companies/createVacancy.html", mensaje="La vacante ya existe")
+
+@app.route('/details_vacancies/<int:vacancy_id>')
+def details_vacancies(vacancy_id):
+    cur = cdb.cursor
+    cur.execute('SELECT * FROM applicants WHERE ApplicantID = %s', (vacancy_id,))
+    vacancies = cur.fetchone()
+    cur.execute('SELECT * FROM companies WHERE CompanyID = %s', (vacancies[1],))
+    companies = cur.fetchone() 
+    cur.execute('SELECT * FROM disabilities WHERE DisabilityID = %s', (vacancies[2],))
+    disabilities = cur.fetchone() 
+    if vacancies:
+        return render_template('companies/detailsVacant.html', vacancy=vacancies, companies=companies, disabilities=disabilities)
+    else:
+        return "Vacancies not found", 404
+
+@app.route('/editVacancyForm/<int:vacancy_id>', methods=['GET', 'POST'])
+def editVacantForm(vacancy_id):
+    cur = cdb.cursor
+    cur.execute('SELECT * FR<<OM vacancies WHERE VacancyID = %s', (vacancy_id,))
+    vacancies = cur.fetchone()
+    cur.execute('SELECT * FROM companies WHERE CompanyID = %s', (vacancies[1],))
+    companies = cur.fetchone() 
+    disabilities = get_disabilities()
+
+    if vacancies:
+        return render_template('companies/editVacant.html', vacancies=vacancies, disabilities=disabilities, companies=companies)
+    else:
+        return "Vacancies not found", 404
+
+@app.route('/edit_vacancy/<int:vacancy_id>', methods=['GET', 'POST'])
+def edit_vacancy(vacancy_id):
+    cur = cdb.cursor
+    if request.method == 'POST':
+        _name = request.form['name']
+        _description = request.form['description']
+        _secname = request.form['salary']
+        _company_id = request.form['company_id']
+        _disabilityid = request.form['disability_id']
+        _phone = request.form['phone']
+        _address = request.form['address']
+        _state = request.form['state']
+        _municipaly = request.form['municipality']
+        _emergencyc = request.form['emergencyc']
+        _related = request.form['related']
+        _disabilityid = request.form['disability']
+        
+        cur.execute('UPDATE vacancie SET username=%s, name=%s, firstname=%s, secname=%s, email=%s, age=%s, phone=%s, address=%s, state=%s, municipaly=%s, emergencyc=%s, related=%s, disabilityid=%s WHERE ApplicantID=%s',
+                    (_username, _name, _firstname, _secname, _email, _age, _phone, _address, _state, _municipaly, _emergencyc, _related, _disabilityid, vacancy_id))
+        cdb.conection.commit()
+        return redirect(url_for('viewVacancies'))
+    
+    cur.execute('SELECT * FROM vacancies WHERE ApplicantId = %s', (vacancy_id,))
+    vacancies = cur.fetchone()
+    if vacancies:
+        return render_template('companies/editVacant.html', vacancies=vacancies)
+    else:
+        return "Vacancies not found", 404
+
+@app.route('/delete_vacancy/<int:vacancy_id>', methods=['get'])
+def delete_vacancy(vacancy_id):
+    cur = cdb.cursor
+    cur.execute('DELETE FROM vacancies WHERE VacancyID = %s', (vacancy_id,))
+    cdb.conection.commit()
+    return redirect(url_for('viewVacancies'))
 
 
 
