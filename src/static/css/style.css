@@ -26,7 +26,7 @@ body{
 }
 .header{
   background:#e0dfce ;
-  background-image: url(image.png);
+  background-image: url(../img/image.png);
   background-position: center bottom;
   background-size: cover;
   background-repeat: no-repeat;
@@ -522,6 +522,7 @@ span{
   font-size: 50px;
 }
 .dis__card h4 {
+  margin-top: 1rem;
   margin-bottom: 0.5rem;
   font-size: 1.2rem;
   font-weight: 600;
@@ -530,6 +531,7 @@ span{
 
 .dis__card p {
   margin-bottom: 2rem;
+  margin: 1.5rem;
   color: #35353a;
 }
 
@@ -616,6 +618,7 @@ span{
 }
 
 .footer__contact {
+  
   max-width: 250px;
   display: grid;
   gap: 1.3rem;
