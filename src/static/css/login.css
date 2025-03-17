@@ -7,17 +7,18 @@
     --primary-color: #04122d;
     --second-color: #f5f3f3;
     --black-color: #000000;
+    --hover-color: #79a70f;
 }
 body{
     background:#eae9d7 ;
-    background-image: url(image.png);
+    background-image: url(../img/image.png);
     background-position: center bottom;
     background-size: cover;
     background-repeat: no-repeat;
     
 }
 a{
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 .wrapper{
@@ -28,7 +29,7 @@ a{
     min-height: 100vh;
     background-color: rgba(0, 0, 0, 0.2);
 }
-.login_box{
+.login-box{
     position: relative;
     width: 450px;
     backdrop-filter: blur(25px);
@@ -104,6 +105,10 @@ a{
     color: var(--black-color);
     padding: 0 10px;
 }
+
+#email {
+    margin-bottom: 10px;
+}
 .icon{
     position: absolute;
     top: 18px;
@@ -118,6 +123,11 @@ a{
 .forgot a{
     color: #79a70f;
 }
+
+.forgot {
+    margin: 0.5rem 0;
+}
+
 .btn-submit{
     width: 100%;
     height: 50px;
@@ -127,10 +137,10 @@ a{
     font-weight: 500;
     border-radius: 30px;
     cursor: pointer;
-    transition: 3s;
+    transition: 0.5s;
 }
 .btn-submit:hover{
-    background: var(--second-color);
+    background: var(--hover-color);
 }
 .btn-submit a{
     color: var(--primary-color);

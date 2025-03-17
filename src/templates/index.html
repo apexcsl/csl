@@ -24,6 +24,9 @@
             <ul>
                 <li><a href="/home">Inicio</a></li>
                 <li><a href="#about">Saber Mas</a></li>
+
+
+                
                 <li><a href="#service">Servicios</a></li>
                 <li><a href="#contact">Contactos</a></li>
                 
@@ -38,7 +41,6 @@
                         </div>
                 {% else %}
                         <li><a href="/login" class="login-btn" >Login</a></li>
-                        <button class="login-btn" id="registrarBtn"><a href="/register">Registrarme</a></button>
                     
                     </div>
                 {% endif %}
@@ -63,43 +65,62 @@
     <footer class="footer">
 
         <section class="footer__content">
-
+  
             <div class="footer__main">
                 <a href="#" class="footer__logo-link">
                     <img src="./assets/logo-white.svg" class="footer__logo">
                 </a>
-
+  
                 <nav class="footer__links">
                     <a href="#" class="footer__link">Sobre Nosotros</a>
                     <a href="#" class="footer__link">Servicios</a>
                     <a href="#" class="footer__link">FAQS</a>
                     <a href="#" class="footer__link">Contacto</a>
                 </nav>
+  
                 <article class="footer__contact">
                     <h4 id="contact" class="footer__copy">Contactanos:</h4>
-
+  
                     <p class="footer__info">
                         Email: apexcsl155@gmail.com
                     </p>
-
+  
                     <p class="footer__info">
                         Telefono: 449 970 8019
                     </p>
-
+  
                     <p class="footer__info">
                         Dirección: Av Perseo 301, Primo Verdad Inegi, 20267 Aguascalientes, Ags.
                     </p>
                 </article>
+  
+                <form class="footer__newsletter">
+                    <input type="email" placeholder="Comentario" class="footer__coment">
+                    <input type="submit" value="Enviar" class="footer__submit">
+                </form>
+  
                 <nav class="footer__social">
+  
                     <a href="#" class="footer__social-links">
                         <i class='bx bxl-instagram footer__media'></i>
                     </a>
+  
+                    <a href="#" class="footer__social-links">
+                        <i class='bx bxl-facebook-circle footer__media'></i>
+                    </a>
+  
+                    <a href="#" class="footer__social-links">
+                      <i class='bx bxl-twitter footer__media' ></i>
+                    </a>
+  
                 </nav>
-
+  
             </div>
         </section>
-
+  
     </footer>
+
+
 
     <script>
         window.addEventListener('scroll', function() {
