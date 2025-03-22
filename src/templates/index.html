@@ -4,7 +4,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta  content="text/html; charset=utf-8" />
-    <meta lang="en">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=7">
     <link rel="stylesheet" href="/static/css/style.css">
@@ -47,7 +46,7 @@
                 {% endif %}
             </ul>
         </nav>
-    
+    </div>
 
 
     {% block content %}
@@ -58,12 +57,11 @@
     
     <br />
     <br />
-    <!--seccion de servicios-->
     <br />
     <br />
     <br />
     <br />
-    <!--pie de pagina
+    <!--pie de pagina-->
     <footer class="footer">
 
         <section class="footer__content">
@@ -120,10 +118,21 @@
             </div>
         </section>
   
-    </footer>-->
+    </footer>
 
-</div>
 
+
+    <script>
+        window.addEventListener('scroll', function() {
+            const headerTxt = document.querySelector('.header-txt');
+            const menu = document.querySelector('.menu');
+            if (window.scrollY > menu.offsetHeight) {
+                headerTxt.classList.add('hidden');
+            } else {
+                headerTxt.classList.remove('hidden');
+            }
+        });
+    </script>
 
 </body>
 </html>
