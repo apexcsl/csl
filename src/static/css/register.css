@@ -192,8 +192,6 @@ input {
     outline: none;
 }
 
-
-
 @media(max-width: 600px){
     .container{
         min-width: 280px;
