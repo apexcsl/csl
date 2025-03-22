@@ -123,7 +123,7 @@ body{
   text-align: center;
 }
 .header-img img{
-  width: 560px;
+  width: 480px;
 }
 .buttons{
   display: flex;
@@ -142,6 +142,18 @@ body{
   background-color: #213e60;
   color: #ccd1cf;
 }
+
+@media(max-width:1296px) {
+  .container {
+    padding: 0 3rem 2rem;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+    margin-right: 2rem;
+  }
+}
+
 /* para que sea responsi*/
 @media(max-width:991px){
   .menu{
@@ -179,7 +191,6 @@ body{
   }
   .header-img{
       width: 100%;
-      margin:  0 25% 0 25%;
   }
   .header-img img{
       width: 410px;
@@ -224,7 +235,6 @@ body{
   }
   .nos-txt{
       width: 100%;
-      padding-left: 0;
       text-align: center;
   }
   .number{
@@ -468,8 +478,7 @@ span{
  width: 600px;
 }
 .nos-txt{
- width: 50%;
- padding-left: 55px;
+ width: 40%;
 }
 
 .nos-txt p{
