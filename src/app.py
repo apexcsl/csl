@@ -52,7 +52,13 @@ def viewCompanies():
     companies = cur.fetchall()
     return render_template('applicants/viewCompanies.html', companies=companies)
 
+@app.route('/faq')
+def faq():
+    return render_template('Content/faq.html')
 
+@app.route('/statistics')
+def statistics():
+    return render_template('Content/statistics.html')
 
 @app.route('/viewVacancies')
 def viewVacancies():
