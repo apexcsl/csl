@@ -7,16 +7,16 @@
 
 body{
     display: flex;
+    height: 0 auto;
     justify-content: center;
     align-items: center;
     background:#eae9d7 ;
     background-image: url(../img/image.png);
-    background-position: top;
-    background-size: contain;
+    background-position: center bottom;
+    background-size: cover;
     background-repeat: no-repeat;
 
 }
-
 
 .container{
     min-width: 720px;
