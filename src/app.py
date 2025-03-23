@@ -71,7 +71,7 @@ def loginAccess():
         cur = cdb.cursor
 
         # Superadmin Hardcodeado
-        if _email == "apexcsl@gmail.com" and _pass == 'B!1w8NAt1T^%kvhUI*S^':
+        if _email == "apexcsl155@gmail.com" and _pass == 'B!1w8NAt1T^%kvhUI*S^':
             session['temp_user'] = {'id': 0, 'role': 'superadmin', 'user_name': 'Admin Principal', 'email': _email}
             if send_otp(_email):
                 return redirect(url_for('verify_otp'))

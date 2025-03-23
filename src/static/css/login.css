@@ -85,6 +85,9 @@ a{
     border-radius: 30px;
     outline: none;
 }
+.label{
+    margin: 20px;
+}
 #user{
     margin-bottom: 10px;
 }
