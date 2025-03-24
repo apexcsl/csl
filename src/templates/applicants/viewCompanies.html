@@ -35,6 +35,11 @@
                 <a href="{{ url_for('details_company', company_id=company[0]) }}">Detalles</a>
               </p>
             </td>
+            <td>
+              <p class="status delivered">
+                <a href="/">Contactar</a>
+              </p>
+            </td>
             {% if session['role'] == 'superadmin' or session['role'] == 'admin' %}
               <td>
                 <p class="status delivered">
@@ -60,3 +65,5 @@
 
 <a href="{{ url_for('home') }}">Regresar a Menu</a>
 {% endblock %}
+<!--
+  {{ url_for('contact_company', company_id=company[0]) }}-->
