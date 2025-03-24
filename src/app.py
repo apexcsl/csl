@@ -240,8 +240,8 @@ def registerAccessAppli():
 
         cur = cdb.cursor
         if verifyRegisterData(_email):
-            cur.execute('INSERT INTO applicants (username, name, firstname, secname, email, encryptedpasswda, photo, type, age, phone, address, state, municipaly, Cv_Name, Cv_Data, emergencycontact, related, disabilityid) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
-                        (_username, _name, _secname, _firstname, _email, generate_password_hash(_pass), _photo, _type, _age, _phone, _address, _state, _municipaly, cv.filename, _cv_data, _emergencyc, _related, _disabilityid))
+            cur.execute('INSERT INTO applicants (username, name, firstname, secname, email, encryptedpasswda, profilePhoto, type, age, phone, address, state, municipaly, Cv_Name, Cv_Data, emergencycontact, related, disabilityid) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+                        (_username, _name, _firstname, _secname, _email, generate_password_hash(_pass), _photo, _type, _age, _phone, _address, _state, _municipaly, cv.filename, _cv_data, _emergencyc, _related, _disabilityid))
             
             cdb.conection.commit()
             return render_template("users/login.html", mensaje="Usuario registrado con éxito")
