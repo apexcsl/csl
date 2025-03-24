@@ -71,7 +71,7 @@ def loginAccess():
         cur = cdb.cursor
 
         # Superadmin Hardcodeado
-        if _email == "apexcsl@gmail.com" and _pass == 'B!1w8NAt1T^%kvhUI*S^':
+        if _email == "apexcsl155@gmail.com" and _pass == 'B!1w8NAt1T^%kvhUI*S^':
             session['temp_user'] = {'id': 0, 'role': 'superadmin', 'user_name': 'Admin Principal', 'email': _email}
             if send_otp(_email):
                 return redirect(url_for('verify_otp'))
@@ -240,8 +240,8 @@ def registerAccessAppli():
 
         cur = cdb.cursor
         if verifyRegisterData(_email):
-            cur.execute('INSERT INTO applicants (username, name, firstname, secname, email, encryptedpasswda, photo, type, age, phone, address, state, municipaly, Cv_Name, Cv_Data, emergencycontact, related, disabilityid) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
-                        (_username, _name, _secname, _firstname, _email, generate_password_hash(_pass), _photo, _type, _age, _phone, _address, _state, _municipaly, cv.filename, _cv_data, _emergencyc, _related, _disabilityid))
+            cur.execute('INSERT INTO applicants (username, name, firstname, secname, email, encryptedpasswda, profilePhoto, type, age, phone, address, state, municipaly, Cv_Name, Cv_Data, emergencycontact, related, disabilityid) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+                        (_username, _name, _firstname, _secname, _email, generate_password_hash(_pass), _photo, _type, _age, _phone, _address, _state, _municipaly, cv.filename, _cv_data, _emergencyc, _related, _disabilityid))
             
             cdb.conection.commit()
             return render_template("users/login.html", mensaje="Usuario registrado con éxito")
@@ -522,4 +522,4 @@ def delete_applicant(applicant_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True, threaded=False)

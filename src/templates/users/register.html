@@ -1,237 +1,221 @@
-{% extends "/index.html" %}
-
 {% block content %}
-<center>
 
-<link rel="stylesheet" href="/static/css/form.css">
-<link rel="stylesheet" href="/static/css/login.css">
-<link rel="stylesheet" href="/static/css/style.css">
-<script src="/static/js/formView.js"></script>
-<div class="login-header">
-        <header>Register</header>
-</div>
-<div class="switch-container">
-        <div class="switch" onclick="changeState()">
-                <div class="slider" id="slider"></div>
-                <div class="labels">
-                <span>S</span>
-                <span>E</span>
-                <span>A</span>
+        <link rel="stylesheet" href="/static/css/style.css">
+        <link rel="stylesheet" href="/static/css/form.css">
+        <link rel="stylesheet" href="/static/css/register.css">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+
+        <div class="container">
+                <div class="form-title">
+                        <span>Registrar</span>
+                </div>
+
+                <div class="switch-container">
+                        <div class="switch" onclick="changeState()">
+                                <div class="slider" id="slider"></div>
+                                <div class="labels">
+                                        <span>S</span>
+                                        <span>E</span>
+                                        <span>A</span>
+                                </div>
+                        </div>
+                </div>
+
+                <div class="content active" id="content1">
+                        <form action="/registerProcessApplicants" method="post" enctype="multipart/form-data">
+                                <div class="main-user-info">
+                                        <div class="user-input-box">
+                                                <label for="username">Usuario</label>
+                                                <input type="text" id="username" name="username" placeholder="Usuario" required />
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="name">Nombre</label>
+                                                <input type="text" id="name" name="name" placeholder="Nombre" required />
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="firstname">Apellido paterno</label>
+                                                <input type="text" id="firstname" name="firstname" placeholder="Apellido paterno" required />
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="secname">Apellido materno</label>
+                                                <input type="text" id="secname" name="secname" placeholder="Apellido materno" required />
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="email">Email</label>
+                                                <input type="email" id="email" name="email" placeholder="Email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address" />
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="password">Contraseña</label>
+                                                <input type="password" id="password" name="password" placeholder="Contraseña" required />
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="phone">Telefono</label>
+                                                <input type="tel" id="phone" name="phone" placeholder="Telefono" required pattern="[0-9]{10}" />
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="age">Edad</label>
+                                                <input type="number" id="age" name="age" placeholder="Edad" required />
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="address">Direccion</label>
+                                                <input type="text" id="address" name="address" placeholder="Direccion" required />
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="state">Estado</label>
+                                                <input type="text" id="state" name="state" placeholder="Estado" required />
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="municipaly">Municipio</label>
+                                                <input type="text" id="municipaly" name="municipaly" placeholder="Municipio" required />
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="cv">Curriculum</label>
+                                                <input type="file" id="cv" name="cv" placeholder="Curriculum" accept="application/pdf" required />
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="emergencyc">Contacto de emergencia</label>
+                                                <input type="tel" id="emergencyc" name="emergencyc" placeholder="Contacto de emergencia" required />
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="related">Parentezco</label>
+                                                <input type="text" id="related" name="related" placeholder="Parentezco" required />
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="logo">Foto de perfil</label>
+                                                <input type="file" class="input-field" id="logo" name="photo" placeholder="Profile Photo" required>
+                                        </div>
+                                        <div class="gender-details-box">
+                                                <select name="disability" id="disability" class="input-field">
+                                                        <option value="">-- Seleccionar discapacidad --</option>
+                                                        {% for disability in disabilities %}
+                                                                <option value="{{ disability[0] }}">{{ disability[1] }}</option>
+                                                        {% endfor %}
+                                                </select>
+                                        </div>
+                                        <div class="form-submit-btn">
+                                                <input type="submit" value="Register">
+                                        </div>
+                                        <div class="sign-up-link">
+                                                <p>¿Ya tienes una cuenta? <a href="login">Inicia sesión</a></p>
+                                        </div>
+                                </div>
+                        </form>
+                </div>
+
+                <div id="content2" class="content">
+                        <div class="main-user-info">
+                                <form action="/registerProcessCompanies" method="post" enctype="multipart/form-data">
+                                        <div class="login-header">
+                                                <header>Empresas</header>
+                                        </div>
+                                        {% if mensaje1 %}
+                                                <div class="alert-message">{{ mensaje1 }}</div>
+                                        {% endif %}
+                                        <div class="user-input-box">
+                                                <label for="name">Nombre</label>
+                                                <input type="text" class="input-field" id="name" name="name" placeholder="Nombre" required>
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="email">Email</label>
+                                                <input type="email" class="input-field" id="email" name="email" placeholder="Email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address">
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="password">Contraseña</label>
+                                                <input type="password" class="input-field" id="password" name="password" placeholder="Contraseña" required>
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="phone">Teléfono</label>
+                                                <input type="tel" class="input-field" id="phone" name="phone" placeholder="Teléfono" required pattern="[0-9]{10}">
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="address">Dirección</label>
+                                                <input type="text" class="input-field" id="address" name="address" placeholder="Dirección" required>
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="state">Estado</label>
+                                                <input type="text" class="input-field" id="state" name="state" placeholder="Estado" required>
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="municipaly">Municipio</label>
+                                                <input type="text" class="input-field" id="municipaly" name="municipaly" placeholder="Municipio" required>
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="description">Descripción</label>
+                                                <input type="text" class="input-field" id="description" name="description" placeholder="Descripción" required>
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="rfc">RFC</label>
+                                                <input type="text" class="input-field" id="rfc" name="rfc" placeholder="RFC" required>
+                                        </div>
+                                        <div class="user-input-box">
+                                                <label for="logo">Foto de perfil</label>
+                                                <input type="file" class="input-field" id="logo" name="logo" placeholder="Profile Photo" required>
+                                        </div>
+                                        
+                                        <div class="form-submit-btn">
+                                                <input type="submit" value="Registrar">
+                                        </div>
+                                        <div class="sign-up-link">
+                                                <p>¿Ya tienes una cuenta? <a href="login">Inicia sesión</a></p>
+                                        </div>
+                                </form>
+                        </div>
+                </div>
+
+
+                <div id="content3" class="content">
+                        <div class="main-user-info">
+                                <form action="/registerProcess" method="post" enctype="multipart/form-data">
+                
+                                        <div class="login-header">
+                                                <header>Administradores</header>
+                                        </div>
+                                        {% if mensaje1 %}
+                                        <div class="alert-message">{{ mensaje1 }}</div>
+                                        {% endif %}
+                
+                                        <div class="user-input-box">
+                                                        <label for="name">Nombre de usuario</label>
+                                                        <input type="text" class="input-field" id="name" name="name" placeholder="Nombre de usuario" required>
+                                        </div>
+                
+                                        <div class="user-input-box">
+                                                        <label for="email">Email</label>
+                                                        <input type="email" class="input-field" id="email" name="email" placeholder="Email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address">
+                                        </div>
+                
+                                        <div class="user-input-box">
+                                                        <label for="logo">Foto de perfil</label>
+                                                        <input type="file" class="input-field" id="logo" name="photo" placeholder="Profile Photo" required>
+                                        </div>
+                
+                                        <div class="user-input-box">
+                                                        <label for="password">Contraseña</label>
+                                                        <input type="password" class="input-field" id="password" name="password" placeholder="Contraseña" required>
+                                        </div>
+
+                                        <div class="forgot">
+                                                        <section>
+                                                                        <input type="checkbox" id="check">
+                                                                        <label for="check">Recordarme</label>
+                                                        </section>
+                                                        <section>
+                                                                        <a href="#">¿Olvidaste tu contraseña?</a>
+                                                        </section>  
+                                        </div>
+
+                                        <div class="form-submit-btn">
+                                                        <input type="submit" value="Registrar">
+                                        </div>
+
+                                        <div class="sign-up-link">
+                                                        <p>¿Ya tienes una cuenta? <a href="/login">Inicia sesión</a></p>
+                                        </div>
+                                </form>
+                        </div>
                 </div>
         </div>
-</div>
 
-<div id="content1" class="content active">      
-        <div class="login-box">
-                <form action="/registerProcessApplicants" method="post" enctype="multipart/form-data">
-                        
-                        <div class="login-header">
-                                <header>Solicitantes</header>
-                        </div>
-                        {% if mensaje1 %} 
-                        {{mensaje1}}
-                        {% endif %}
-                        
-                        <div class="input-box">
-                                <input type="text" class="input-field" id="username" name="username" placeholder="Nombre" required>
-                        </div>
-
-                        <div class="input-box">
-                                <input type="text" class="input-field" id="name" name="name" placeholder="Nombre" required>
-                        </div>
-
-                        <div class="input-box">
-                                <input type="text" class="input-field" id="firstname" name="firstname" placeholder="Apellido paterno" required>
-                        </div>
-
-                        <div class="input-box">
-                                <input type="text" class="input-field" id="secname" name="secname" placeholder="Apellido materno" required>
-                        </div>
-
-                        <div class="input-box">
-                        <input type="email" class="input-field" id="email" name="email" placeholder="Email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address">
-                        </div>
-
-                        <div class="input-box">
-                                <input type="password" class="input-field" id="password" name="password" placeholder="Contraseña" required>
-                        </div>
-
-                        <div class="input-box">
-                                <input type="number" class="input-field" id="age" name="age" placeholder="Edad" required>
-                        </div>
-
-                        <div class="input-box">
-                                <input type="tel" class="input-field" id="phone" name="phone" placeholder="Telefono" required pattern="[0-9]{10}">
-                        </div>
-
-                        <div class="input-box">
-                                <input type="text" class="input-field" id="address" name="address" placeholder="Dirección" required>
-                        </div>
-
-                        <div class="input-box">
-                                <input type="text" class="input-field" id="state" name="state" placeholder="Estado" required>
-                        </div>
-
-                        <div class="input-box">
-                                <input type="text" class="input-field" id="municipaly" name="municipaly" placeholder="Municipio" required>
-                        </div>
- 
-                        <div class="input-box">
-                                <input type="file" class="input-field" id="cv" name="cv" placeholder="Curriculum" accept="application/pdf" required>
-                        </div>
-
-                        <div class="input-box">
-                                <input type="tel" class="input-field" id="emergencyc" name="emergencyc" placeholder="Contacto de emergencia" required>
-                        </div>
-
-                        <div class="input-box">
-                                <input type="text" class="input-field" id="related" name="related" placeholder="Parentezco" required>
-                        </div>
-                        
-                        <div class="input-box">
-                                <input type="file" class="input-field" id="logo" name="phtoto" placeholder="Profile Photo" required>
-                        </div>
-
-                        <select name="disability" id="disability" class="input-field">
-                                <option value="">-- Seleccionar discapacidad --</option>
-                                {% for disability in disabilities %}
-                                <option value="{{disability[0]}}">{{disability[1]}}</option>
-                                {% endfor %}
-                        </select>
-
-                        <!-- <div class="forgot">
-                                <section>
-                                        <input type="checkbox" id="check">
-                                        <label for="check">Remember me</label>
-                                </section>
-                                <section>
-                                        <a href="#">Forgot password</a>
-                                </section>  
-                        </div>-->
-                        <div class="input-submit">
-                                <button class="submit-btn" id="submit">Register</button>
-                        </div>
-                        <div class="sign-up-link">
-                                <p>Already have an account? <a href="#">Sign In</a></p>
-                        </div>
-                </form>
-        </div>
-</div>
-
-<div id="content2" class="content">
-        <div class="login-box">
-                <form action="/registerProcessCompanies" method="post"  enctype="multipart/form-data">
-                        
-                        <div class="login-header">
-                                <header>Empresas</header>
-                        </div>
-                        {% if mensaje1 %}
-                        {{mensaje1}}
-                        {% endif %}
-
-                        <div class="input-box">
-                                <input type="text" class="input-field" id="name" name="name" placeholder="Nombre" required>
-                        </div>
-
-                        <div class="input-box">
-                        <input type="email" class="input-field" id="email" name="email" placeholder="Email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address">
-                        </div>
-
-                        <div class="input-box">
-                                <input type="password" class="input-field" id="password" name="password" placeholder="Contraseña" required>
-                        </div>
-                        
-                        <div class="input-box">
-                                <input type="tel" class="input-field" id="phone" name="phone" placeholder="Telefono" required pattern="[0-9]{10}">
-                        </div>
-
-                        <div class="input-box">
-                                <input type="text" class="input-field" id="address" name="address" placeholder="Dirección" required>
-                        </div>
-
-                        <div class="input-box">
-                                <input type="text" class="input-field" id="state" name="state" placeholder="Estado" required>
-                        </div>
-
-                        <div class="input-box">
-                                <input type="text" class="input-field" id="municipaly" name="municipaly" placeholder="Municipio" required>
-                        </div>
-
-                        <div class="input-box">
-                                <input type="text" class="input-field" id="description" name="description" placeholder="Descripción" required>
-                        </div>
-
-                        <div class="input-box">
-                                <input type="text" class="input-field" id="rfc" name="rfc" placeholder="RFC" required>
-                        </div>
-
-
-                        <!-- <div class="forgot">
-                                <section>
-                                        <input type="checkbox" id="check">
-                                        <label for="check">Remember me</label>
-                                </section>
-                                <section>
-                                        <a href="#">Forgot password</a>
-                                </section>  
-                        </div>-->
-                        <div class="input-submit">
-                                <button class="submit-btn" id="submit">Register</button>
-                        </div>
-                        <div class="sign-up-link">
-                                <p>Already have an account? <a href="#">Sign In</a></p>
-                        </div>
-                </form>
-        </div>
-</div>
-
-<div id="content3" class="content">
-        <div class="login-box">
-                <form action="/registerProcess" method="post" enctype="multipart/form-data">
-                        
-                        <div class="login-header">
-                                <header>Administradores</header>
-                        </div>
-                        {% if mensaje1 %}
-                        {{mensaje1}}
-                        {% endif %}
-
-                        <div class="input-box">
-                                <input type="text" class="input-field" id="name" name="name" placeholder="Nombre de usuario" required>
-                        </div>
-
-                        <div class="input-box">
-                        <input type="email" class="input-field" id="email" name="email" placeholder="Email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address">
-                        </div>
-
-                        <div class="input-box">
-                                <input type="file" class="input-field" id="logo" name="photo" placeholder="Profile Photo" required>
-                        </div>
-
-                        <div class="input-box">
-                                <input type="password" class="input-field" id="password" name="password" placeholder="Contraseña" required>
-                        </div>
-                        <div class="forgot">
-                                <section>
-                                        <input type="checkbox" id="check">
-                                        <label for="check">Remember me</label>
-                                </section>
-                                <section>
-                                        <a href="#">Forgot password</a>
-                                </section>  
-                        </div>
-                        <div class="input-submit">
-                                <button class="submit-btn" id="submit">Register</button>
-                        </div>
-                        <div class="sign-up-link">
-                                <p>Already have an account? <a href="#">Sign In</a></p>
-                        </div>
-                </form>
-        </div>
-</div>
-</center>
-
-<script>
-
-</script>
+        <script src="/static/js/formView.js"></script>
 {% endblock %}

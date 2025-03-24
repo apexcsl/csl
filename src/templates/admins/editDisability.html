@@ -1,29 +1,51 @@
-{% extends "index.html" %}
+{% extends "index.html" %} {% block content %}
 
-{% block content %}
-<h2>Editar Discapacidad</h2>
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="/static/css/tables.css">
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+
+
 <form method="post" action="/edit_disability/{{ disability[0] }}" enctype="multipart/form-data">
-  <table>
-    <tr>
-      <th>ID</th>
-      <td>{{ disability[0] }}</td>
-    </tr>
-    <tr>
-      <th>Nombre</th>
-      <td><input type="text" name="name" value="{{ disability[2] }}"></td>
-    </tr>
-    <tr>
-      <th>Categoria</th>
-      <td><input type="text" name="category" value="{{ disability[1] }}"></td>
-    </tr>
-    <tr>
-      <th>Descripcion</th>
-      <td><input type="text" name="description" value="{{ disability[3] }}"></td>
-    </tr>
-    
+  <section class="tb">
+    <section class="table" id="customers_table">
+      <div class="table__header">
+        <h1>Editar Discapacidad</h1>
+      </div>
+      <div class="table__body">
+        <table border="1">
+          <thead>
+            <tr>
+              <th colspan="2">Datos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>ID</th>
+              <td>{{ disability[0] }}</td>
+            </tr>
+            <tr>
+              <th>Nombre</th>
+              <td><input type="text" name="name" value="{{ disability[2] }}"></td>
+            </tr>
+            <tr>
+              <th>Categoria</th>
+              <td><input type="text" name="category" value="{{ disability[1] }}"></td>
+            </tr>
+            <tr>
+              <th>Descripcion</th>
+              <td><input type="text" name="description" value="{{ disability[3] }}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </section>
 
-  </table>
   <button type="submit">Guardar Cambios</button>
+
 </form>
+
 <a href="{{ url_for('viewDisabilities') }}">Regresar a Discapacidades</a>
+
 {% endblock %}

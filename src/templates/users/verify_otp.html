@@ -1,5 +1,24 @@
-<form method="post">
-  <label>Introduce el código de verificación enviado a tu correo:</label>
-  <input type="text" name="otp" required>
-  <button type="submit">Verificar</button>
-</form>
+{% block content %}
+
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="/static/css/login.css">
+<center>
+  <div class="wrapper">
+    <div class="login-box">
+      <form method="post">
+        <div class="label">
+          <label>Introduce el código de verificación enviado a tu correo:</label>
+        </div>
+        <div class="input-box">
+          <input class="input-field" type="text" id="email" name="otp" required>
+        </div>
+        <div class="input-submit">
+          <button class="btn-submit" type="submit">Verificar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+</center>
+
+{% endblock %}
