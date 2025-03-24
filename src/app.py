@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, send_file, g, flash
+from flask import Flask, render_template, request, redirect, url_for, session, send_file, g, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from db.database import CDB
 
@@ -6,6 +6,7 @@ import base64
 from config import config
 from mediaUploader import *
 from mfaSender import *
+from datetime import datetime
 
 
 cdb = CDB()
@@ -645,51 +646,90 @@ def delete_applicant(applicant_id):
     return redirect(url_for('viewApplicants'))
 
 
-@app.route('/sendMessageForm')
-def sendMessageForm():
-    if not session.get('user_name'):
-        return redirect(url_for('login'))
-    return render_template('chat/sendMessage.html')
 
-@app.route('/sendMessage', methods=['GET', 'POST'])
+@app.route('/sendMessage', methods=['POST', 'GET'])
 def sendMessage():
-    if request.method == 'POST':
-        _sender = session.get('user_name')
-        _recipient = request.form['recipient_userName']
-        _message = request.form['message']
-        _status = "undelivered"
-        cur = cdb.cursor
+    _sender = session.get('user_name')
+    _recipient = request.form.get('recipient_userName')
+    _message = request.form.get('message')
+    _status = "undelivered"
+    cur = cdb.cursor  
 
-        # Verify if recipient exists in admins, companies, or applicants
-        cur.execute('SELECT COUNT(*) FROM admins WHERE UserName = %s', (_recipient,))
-        recipient_exists_admin = cur.fetchone()[0] > 0
-
-        cur.execute('SELECT COUNT(*) FROM companies WHERE name = %s', (_recipient,))
-        recipient_exists_company = cur.fetchone()[0] > 0
-
-        cur.execute('SELECT COUNT(*) FROM applicants WHERE UserName = %s', (_recipient,))
-        recipient_exists_applicant = cur.fetchone()[0] > 0
-
-        if not (recipient_exists_admin or recipient_exists_company or recipient_exists_applicant):
-            flash("El usuario destinatario no existe.")
-            return render_template('chat/sendMessage.html', mensaje="El usuario destinatario no existe.")
-
-        cur.execute('INSERT INTO messages (SenderUserName, RecipientUserName, Message, Status) VALUES (%s, %s, %s, %s)', (_sender, _recipient, _message, _status))
-        cdb.conection.commit()
-        return render_template('chat/sendMessage.html', mensaje="Mensaje enviado con éxito")
+    if not _sender or not _recipient or not _message:
+        return jsonify({'error': 'Todos los campos son obligatorios'}), 400
 
 
-@app.route('/chat')
-def chat():
-    if not session.get('user_name'):
-        return redirect(url_for('login'))
-    return render_template('chat/chat.html')
+    cur.execute('SELECT COUNT(*) FROM admins WHERE UserName = %s', (_recipient,))
+    recipient_exists = cur.fetchone()[0] > 0
 
-@app.route('/viewChat', methods=['GET'])
+    cur.execute('SELECT COUNT(*) FROM companies WHERE name = %s', (_recipient,))
+    recipient_exists |= cur.fetchone()[0] > 0
+
+    cur.execute('SELECT COUNT(*) FROM applicants WHERE UserName = %s', (_recipient,))
+    recipient_exists |= cur.fetchone()[0] > 0
+
+    if not recipient_exists:
+        return jsonify({'error': 'El usuario destinatario no existe'}), 404
+
+
+    cur.execute('INSERT INTO messages (SenderUserName, RecipientUserName, Message, Status) VALUES (%s, %s, %s, %s)', 
+                (_sender, _recipient, _message, _status))
+    cdb.conection.commit()
+
+
+    cur.execute("SELECT * FROM messages WHERE (SenderUserName = %s AND RecipientUserName = %s) OR (SenderUserName = %s AND RecipientUserName = %s) ORDER BY uploaded_at ASC", 
+                (_sender, _recipient, _recipient, _sender))
+    messages = cur.fetchall()
+
+
+    messages = [
+        (
+            m[0],  # ID
+            m[1],  # SenderUserName
+            m[2],  # RecipientUserName
+            m[3],  # Message
+            m[4],  # Status
+            m[5].strftime("%I:%M %p"), 
+            'sent' if m[1] == _sender else 'received'  
+        )
+        for m in messages
+    ]
+    
+    return jsonify({"messages": render_template("chat/messages_partial.html", messages=messages)})
+
+
+
+
+@app.route('/viewChat', methods=['GET', 'POST'])
 def viewChat():
     if not session.get('user_name'):
         return redirect(url_for('login'))
-    return render_template('chat/viewChat.html')
+    
+    cur = cdb.cursor
+    cur.execute('SELECT DISTINCT SenderUserName FROM messages WHERE RecipientUserName = %s', (session.get('user_name'),))
+    senders = cur.fetchall()
+    
+    sender = request.args.get('sender')
+    messages = []
+    
+    if sender:
+        cur.execute('SELECT * FROM messages WHERE (RecipientUserName = %s AND SenderUserName = %s) OR (RecipientUserName = %s AND SenderUserName = %s) ORDER BY uploaded_at',
+                    (session.get('user_name'), sender, sender, session.get('user_name')))
+        messages = cur.fetchall()
+
+        messages = [(m[0], m[1], m[2], m[3], m[4], m[5].strftime("%I:%M %p"), 'sent' if m[1] == session.get('user_name') else 'received') for m in messages]
+
+    return render_template('chat/viewChat.html', senders=senders, messages=messages, sender=sender, active_user=session.get('user_name'))
+
+
+@app.route('/chat', methods=['GET'])
+def chat():
+    if not session.get('user_name'):
+        return redirect(url_for('login'))
+    cur = cdb.cursor
+    cur.execute('SELECT * FROM messages WHERE RecipientUserName = %s OR SenderUserName = %s', (session.get('user_name'), session.get('user_name'),))
+    messages = cur.fetchall()
+    return render_template('chat/chat.html', messages=messages)
 
 
 if __name__ == '__main__':
