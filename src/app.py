@@ -129,6 +129,131 @@ def verify_otp():
 
     return render_template("users/verify_otp.html")
 
+@app.route('/resend_otp', methods=['POST', 'GET'])
+def resend_otp_reset():
+    email = request.form.get('email')
+    if email:
+        if send_otp(email):
+            flash("Código reenviado")
+        else:
+            flash("Error reenviando el código")
+    else:
+        flash("Correo electrónico no proporcionado")
+
+    return redirect(url_for('verify_otp_reset'))
+
+
+@app.route('/recovery')
+def recovery():
+    return render_template('users/recovery.html')
+
+@app.route('/recoveryProcess', methods=['GET', 'POST'])
+def recoveryProcess():
+    if request.method == 'POST':
+        if 'email' in request.form:
+            _email = request.form['email']
+            cur = cdb.cursor
+
+            cur.execute('SELECT AdminId, UserName, EncryptedPassword FROM admins WHERE email = %s', (_email,))
+            admin = cur.fetchone()
+            
+            if admin:
+                session['temp_user'] = {'id': admin[0], 'role': 'admin', 'user_name': admin[1], 'email': _email}
+                if send_otp(_email):
+                    return redirect(url_for('verify_otp_reset'))
+                else:
+                    flash("Error enviando el código de verificación")
+                    return redirect(url_for('recovery'))
+
+            cur.execute('SELECT CompanyId, name, EncryptedPasswdC FROM companies WHERE email = %s', (_email,))
+            company = cur.fetchone()
+            
+            if company:
+                session['temp_user'] = {'id': company[0], 'role': 'company', 'user_name': company[1], 'email': _email}
+                if send_otp(_email):
+                    return redirect(url_for('verify_otp_reset'))
+                else:
+                    flash("Error enviando el código de verificación")
+                    return redirect(url_for('recovery'))
+
+            cur.execute('SELECT ApplicantId, UserName, EncryptedPasswdA, name FROM applicants WHERE email = %s', (_email,))
+            applicant = cur.fetchone()
+            
+            if applicant:
+                session['temp_user'] = {'id': applicant[0], 'role': 'applicant', 'user_name': applicant[3], 'email': _email}
+                if send_otp(_email):
+                    return redirect(url_for('verify_otp_reset'))
+                else:
+                    flash("Error enviando el código de verificación")
+                    return redirect(url_for('recovery'))
+            
+            return render_template("users/recovery.html", mensaje1="Usuario no encontrado")
+    return render_template('users/recovery.html')
+
+
+@app.route('/verify_otp_reset', methods=['GET', 'POST'])
+def verify_otp_reset():
+    if request.method == 'POST':
+        user_otp = request.form.get('otp')
+
+        if user_otp and session.get('otp') == user_otp:
+            session.pop('otp', None)
+            return redirect(url_for('reset_password_form', email=session['temp_user']['email']))
+        else:
+            flash("Código incorrecto")
+
+    return render_template("users/verify_otp.html")
+    
+@app.route('/reset_password_form', methods=['GET'])
+def reset_password_form():
+    email = request.args.get('email')
+    if email:
+        return render_template('users/recoveryForm.html', email=email)
+    else:
+        flash("Correo electrónico no proporcionado")
+        return redirect(url_for('verify_otp'))
+
+
+@app.route('/reset_password', methods=['GET', 'POST'])
+def reset_password():
+    if request.method == 'POST':
+        new_password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+
+        print(f"New password: {new_password}, Confirm password: {confirm_password}")
+
+        if new_password and confirm_password and new_password == confirm_password:
+            hashed_password = generate_password_hash(new_password)
+            cur = cdb.cursor
+
+            print(f"Hashed password: {hashed_password}")
+            print(f"User role: {session['temp_user']['role']}, User ID: {session['temp_user']['id']}")
+
+            if session['temp_user']['role'] == 'admin':
+                cur.execute('UPDATE admins SET EncryptedPassword = %s WHERE AdminId = %s',
+                            (hashed_password, session['temp_user']['id']))
+                print("Password updated for admin.")
+            elif session['temp_user']['role'] == 'company':
+                cur.execute('UPDATE companies SET EncryptedPasswdC = %s WHERE CompanyId = %s',
+                            (hashed_password, session['temp_user']['id']))
+                print("Password updated for company.")
+            elif session['temp_user']['role'] == 'applicant':
+                cur.execute('UPDATE applicants SET EncryptedPasswdA = %s WHERE ApplicantId = %s',
+                            (hashed_password, session['temp_user']['id']))
+                print("Password updated for applicant.")
+
+            cdb.conection.commit()
+            print("Database commit successful.")
+            session.clear()
+            flash("Contraseña actualizada con éxito. Por favor, inicie sesión.")
+            return redirect(url_for('login'))
+        else:
+            print("Passwords do not match or are missing.")
+            flash("Las contraseñas no coinciden. Inténtelo de nuevo.")
+
+    return render_template("users/recoveryForm.html")
+
+
 @app.route('/logout')
 def logout():
     session.clear()  
