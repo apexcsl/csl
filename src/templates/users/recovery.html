@@ -1,0 +1,30 @@
+
+
+{% block content %}
+
+<center>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/login.css">
+
+    <div class="wrapper">
+        <div class="login-box">
+            <form action="/recoveryProcess" method="post">
+                <div class="login-header">
+                    <header>Recuperar Contraseña</header>
+                </div>
+
+                {% if mensaje1 %}
+                <div class="alert">
+                    {{mensaje1}}
+                </div>
+                {% endif %}
+
+                <div class="input-box">
+                    <input type="email" id="email" name="email" class="input-field" placeholder="Correo" required>
+                </div>
+
+                <div class="input-submit">
+                    <button class="btn-submit">Enviar</button>
+                </div>
+
+{% endblock content %} 
