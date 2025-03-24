@@ -1,0 +1,35 @@
+{% block content %}
+
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="/static/css/chat.css">
+
+<div class="chat-preview-container">
+  <h2>Chats</h2>
+  <ul class="chat-list">
+    <li class="chat-item">
+      <a href="/viewChat" class="chat-link">
+        <div class="chat-avatar">
+          <img src="/static/images/avatar1.png" alt="User Avatar">
+        </div>
+        <div class="chat-info">
+          <h3 class="chat-name">John Doe</h3>
+          <p class="chat-last-message">Hey, how are you?</p>
+        </div>
+      </a>
+    </li>
+    <li class="chat-item">
+      <a href="#" class="chat-link">
+        <div class="chat-avatar">
+          <img src="/static/images/avatar2.png" alt="User Avatar">
+        </div>
+        <div class="chat-info">
+          <h3 class="chat-name">Jane Smith</h3>
+          <p class="chat-last-message">Let's catch up later!</p>
+        </div>
+      </a>
+    </li>
+    <!-- Add more chat items as needed -->
+  </ul>
+</div>
+
+{% endblock content %}

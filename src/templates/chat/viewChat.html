@@ -1,0 +1,34 @@
+    {% block content %}
+
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/chat.css">
+
+    <div class="chat-container">
+      <div class="chat-header">
+        <div class="chat-avatar">
+          <img src="/static/images/avatar1.png" alt="User Avatar">
+        </div>
+        <h2 class="chat-name">John Doe</h2>
+      </div>
+
+      <div class="chat-messages">
+        <div class="message message-sent">
+          <p class="message-text">Hey, how are you?</p>
+          <span class="message-time">10:00 AM</span>
+        </div>
+        <div class="message message-received">
+          <p class="message-text">I'm good, thanks! How about you?</p>
+          <span class="message-time">10:02 AM</span>
+        </div>
+        <!-- Add more messages as needed -->
+      </div>
+
+      <div class="chat-input-container">
+        <form method="POST" action="/sendMessage">  
+          <input type="text" name="message" class="chat-input" placeholder="Type your message...">
+          <button type="submit" class="chat-send-button">Send</button>
+        </form>
+      </div>
+    </div>
+
+    {% endblock content %}

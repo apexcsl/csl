@@ -21,7 +21,7 @@ app.config.from_object('config.DevelopmentConfig')
 app.config['SESSION_TYPE'] = 'filesystem'  
 app.config['SESSION_PERMANENT'] = True     
 app.config['SESSION_USE_SIGNER'] = True    
-app.config['PERMANENT_SESSION_LIFETIME'] = 900  
+app.config['PERMANENT_SESSION_LIFETIME'] = 90000
   
 
 
@@ -644,6 +644,52 @@ def delete_applicant(applicant_id):
     cdb.conection.commit()
     return redirect(url_for('viewApplicants'))
 
+
+@app.route('/sendMessageForm')
+def sendMessageForm():
+    if not session.get('user_name'):
+        return redirect(url_for('login'))
+    return render_template('chat/sendMessage.html')
+
+@app.route('/sendMessage', methods=['GET', 'POST'])
+def sendMessage():
+    if request.method == 'POST':
+        _sender = session.get('user_name')
+        _recipient = request.form['recipient_userName']
+        _message = request.form['message']
+        _status = "undelivered"
+        cur = cdb.cursor
+
+        # Verify if recipient exists in admins, companies, or applicants
+        cur.execute('SELECT COUNT(*) FROM admins WHERE UserName = %s', (_recipient,))
+        recipient_exists_admin = cur.fetchone()[0] > 0
+
+        cur.execute('SELECT COUNT(*) FROM companies WHERE name = %s', (_recipient,))
+        recipient_exists_company = cur.fetchone()[0] > 0
+
+        cur.execute('SELECT COUNT(*) FROM applicants WHERE UserName = %s', (_recipient,))
+        recipient_exists_applicant = cur.fetchone()[0] > 0
+
+        if not (recipient_exists_admin or recipient_exists_company or recipient_exists_applicant):
+            flash("El usuario destinatario no existe.")
+            return render_template('chat/sendMessage.html', mensaje="El usuario destinatario no existe.")
+
+        cur.execute('INSERT INTO messages (SenderUserName, RecipientUserName, Message, Status) VALUES (%s, %s, %s, %s)', (_sender, _recipient, _message, _status))
+        cdb.conection.commit()
+        return render_template('chat/sendMessage.html', mensaje="Mensaje enviado con éxito")
+
+
+@app.route('/chat')
+def chat():
+    if not session.get('user_name'):
+        return redirect(url_for('login'))
+    return render_template('chat/chat.html')
+
+@app.route('/viewChat', methods=['GET'])
+def viewChat():
+    if not session.get('user_name'):
+        return redirect(url_for('login'))
+    return render_template('chat/viewChat.html')
 
 
 if __name__ == '__main__':

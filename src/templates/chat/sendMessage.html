@@ -1,0 +1,37 @@
+{% block content %}
+
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="/static/css/chat.css">
+<link rel="stylesheet" href="/static/css/login.css">
+
+<div class="wrapper">
+  <div class="login-box">
+    <form action="/sendMessage" method="post">
+
+      <div class="login-header">
+        <header>Enviar Mensaje</header>
+      </div>
+
+
+      <div class="input-box">
+        <input type="text" id="user_name" name="recipient_userName" class="input-field" placeholder="Nombre de usuario del destinatario" required>
+      </div>
+
+      <br>
+
+      <div class="input-box">
+        <input id="message" name="message" class="input-field" placeholder="Escribe tu mensaje" required></input>
+      </div>
+
+      <br>
+
+      <input type="hidden" id="status" name="status" value="pendingDelivery">
+
+      <div class="input-submit">
+        <button class="btn-submit">Enviar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock content %}

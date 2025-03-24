@@ -106,6 +106,15 @@ class CDB():
         except pymysql.Error as err:
             print(f"\nError al crear la tabla user: {err}")
 
+    # Funcion para crear la tabla Messages
+    def createTableMessages(self):
+        try:
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS Messages (MessageID INT AUTO_INCREMENT PRIMARY KEY, SenderUserName VARCHAR(255), RecipientUserName VARCHAR(255), Message TEXT, Status VARCHAR(255), uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+            print("\nTabla mensajes creada con éxito")
+        except pymysql.Error as err:
+            print(f"\nError al crear la tabla user: {err}")
+
+
     # Funcion para crear la tabla Aprobados
     def createTableApproved(self):
         try:
@@ -148,6 +157,7 @@ class CDB():
             self.createTableDisabilities()
             self.createTableVacancies()
             self.createTableVideos()
+            self.createTableMessages()
             self.createTableApproved()
             self.insertUser('AdminP', 'admin@gmail.com', 'B!1w8NAt1T^%kvhUI*S^')
             datos = [
