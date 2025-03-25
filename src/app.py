@@ -645,7 +645,55 @@ def delete_applicant(applicant_id):
     cdb.conection.commit()
     return redirect(url_for('viewApplicants'))
 
+@app.route('/sendNewMessage', methods=['POST', 'GET'])
+def sendNewMessage():
+    _sender = session.get('user_name')
+    _recipient = request.form.get('recipient_userName')
+    _message = request.form.get('message')
+    _status = "undelivered"
+    cur = cdb.cursor  
 
+    if not _sender or not _recipient or not _message:
+        return jsonify({'error': 'Todos los campos son obligatorios'}), 400
+
+
+    cur.execute('SELECT COUNT(*) FROM admins WHERE UserName = %s', (_recipient,))
+    recipient_exists = cur.fetchone()[0] > 0
+
+    cur.execute('SELECT COUNT(*) FROM companies WHERE name = %s', (_recipient,))
+    recipient_exists |= cur.fetchone()[0] > 0
+
+    cur.execute('SELECT COUNT(*) FROM applicants WHERE UserName = %s', (_recipient,))
+    recipient_exists |= cur.fetchone()[0] > 0
+
+    if not recipient_exists:
+        return jsonify({'error': 'El usuario destinatario no existe'}), 404
+
+
+    cur.execute('INSERT INTO messages (SenderUserName, RecipientUserName, Message, Status) VALUES (%s, %s, %s, %s)', 
+                (_sender, _recipient, _message, _status))
+    cdb.conection.commit()
+
+
+    cur.execute("SELECT * FROM messages WHERE (SenderUserName = %s AND RecipientUserName = %s) OR (SenderUserName = %s AND RecipientUserName = %s) ORDER BY uploaded_at ASC", 
+                (_sender, _recipient, _recipient, _sender))
+    messages = cur.fetchall()
+
+
+    messages = [
+        (
+            m[0],  # ID
+            m[1],  # SenderUserName
+            m[2],  # RecipientUserName
+            m[3],  # Message
+            m[4],  # Status
+            m[5].strftime("%I:%M %p"), 
+            'sent' if m[1] == _sender else 'received'  
+        )
+        for m in messages
+    ]
+    
+    return render_template("chat/chat.html", messages=messages)
 
 @app.route('/sendMessage', methods=['POST', 'GET'])
 def sendMessage():
@@ -730,6 +778,10 @@ def chat():
     cur.execute('SELECT * FROM messages WHERE RecipientUserName = %s OR SenderUserName = %s', (session.get('user_name'), session.get('user_name'),))
     messages = cur.fetchall()
     return render_template('chat/chat.html', messages=messages)
+
+@app.route('/newChat')
+def newChat():
+    return render_template('chat/newChat.html')
 
 
 if __name__ == '__main__':

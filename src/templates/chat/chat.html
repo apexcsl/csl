@@ -5,32 +5,50 @@
 
 <div class="chat-preview-container">
   <h2>Chats</h2>
+
   <ul class="chat-list">
-    {% for message in messages %}
+
     <li class="chat-item">
-      <a href="/viewChat?sender={% if g.user == message[1] %}{{ message[2] }}{% else %}{{ message[1] }}{% endif %}" class="chat-link">
-        <div class="chat-avatar">
-          <img src="/static/images/avatar1.png" alt="User Avatar">
-        </div>
-        <div class="chat-info">
-          <h3 class="chat-name">
-            {% if g.user == message[1] %}
-              {{ message[2] }}
-            {% else %}
-              {{ message[1] }}
-            {% endif %}
-          </h3>
-          <p class="chat-last-message">
-            {% if g.user == message[1] %}
-              You:
-            {% else %}
-              {{ message[1] }}:
-            {% endif %}
-            {{ message[3] }}
-          </p>
-        </div>
-      </a>
+      <p><a href="/">Regresar al Inicio</a></p>
     </li>
+
+
+    <li class="chat-item">
+      <p><a href="/newChat">Crear Chat</a></p>
+    </li>
+
+    {% set latest_messages = {} %}  {# Diccionario para almacenar el último mensaje de cada chat #}
+
+    {% for message in messages %}
+      {% set chat_key = [message[1], message[2]] | sort | join('-') %} {# Crear clave única #}
+      {% set latest_messages = latest_messages.update({chat_key: message}) or latest_messages %} {# Almacenar solo el último mensaje #}
+    {% endfor %}
+
+    {% for chat_key, message in latest_messages.items() %}
+      <li class="chat-item">
+        <a href="/viewChat?sender={% if g.user == message[1] %}{{ message[2] }}{% else %}{{ message[1] }}{% endif %}" class="chat-link">
+          <div class="chat-avatar">
+            <img src="/static/images/avatar1.png" alt="User Avatar">
+          </div>
+          <div class="chat-info">
+            <h3 class="chat-name">
+              {% if g.user == message[1] %}
+                {{ message[2] }}
+              {% else %}
+                {{ message[1] }}
+              {% endif %}
+            </h3>
+            <p class="chat-last-message">
+              {% if g.user == message[1] %}
+                Tú:
+              {% else %}
+                {{ message[1] }}:
+              {% endif %}
+              {{ message[3] }}
+            </p>
+          </div>
+        </a>
+      </li>
     {% endfor %}
   </ul>
 </div>
