@@ -106,7 +106,7 @@
 }
 
 .chat-name {
-  color: var(--white);
+  color: var(--color-secundario);
   margin-left: 10px;
   font-size: 18px;
   font-weight: bold;
