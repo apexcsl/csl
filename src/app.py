@@ -62,9 +62,6 @@ def faq():
 def statistics():
     return render_template('Content/statistics.html')
 
-@app.route('/viewVacancies')
-def viewVacancies():
-  return render_template('companies/viewVacancies.html')
 
 
 @app.route('/viewVideos')
