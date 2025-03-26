@@ -123,6 +123,15 @@ class CDB():
         except pymysql.Error as err:
             print(f"\nError al crear la tabla user: {err}")
 
+    #Función para crear la tabla Aplications
+    def createTableApplications(self):
+        try:
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS Applications (AppID Int AUTO_INCREMENT PRIMARY KEY, VacancyID INT, ApplicantID INT, uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+            print("\nTabla Applications creada con éxito")
+        except pymysql.Error as err:
+            print(f"\nError al crear la tabla Applications: {err}")
+
+
     #Funcion para insertar discapacidades
     def insertDisability(self, category, name, description):
         try:
@@ -147,6 +156,7 @@ class CDB():
             self.createTableVideos()
             self.createTableMessages()
             self.createTableApproved()
+            self.createTableApplications()
             datos = [
                 ('Fisica o Motora', 'Parálisis', 'Pérdida completa o parcial de la capacidad de movimiento de una o más partes del cuerpo debido a daño en el sistema nervioso o muscular.'),
                 ('Fisica o Motora', 'Amputaciones', 'Pérdida de una extremidad o parte del cuerpo, que afecta la movilidad y el uso de prótesis o adaptaciones.'),
