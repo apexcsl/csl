@@ -130,14 +130,6 @@ class CDB():
         except pymysql.Error as err:
             print(f"\nError al crear la tabla user: {err}")
 
-    #Función para crear la tabla de Redirections
-    def createTableRedirections(self):
-        try:
-            self.cursor.execute("CREATE TABLE IF NOT EXISTS Redirections (RedirectedID INT AUTO_INCREMENT PRIMARY KEY, CompanyID INT, DisavilityID INT, ApplicantID INT, OriginVacancyID INT, DestinationVacancyID INT,  uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
-            print("\nTabla Redirections creada con éxito")
-        except pymysql.Error as err:
-            print(f"\nError al crear la tabla redirections: {err}")
-
     # Funcion para insertar un usuario predeterminado
     def insertUser(self, username, email, password):
         try:
