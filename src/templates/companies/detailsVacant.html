@@ -1,0 +1,45 @@
+{% extends "index.html" %} {% block content %}
+<h2>Vacante</h2>
+<table>
+  {% if session['role'] == 'superadmin' or session['role'] == 'admin' %}
+  <tr>
+    <th>ID</th>
+    <td>{{ vacancy[0] }}</td>
+  </tr>
+  {% endif %}
+  <tr>
+    <th>Nombre</th>
+    <td>{{ vacancy[4] }}</td>
+  </tr>
+  <tr>
+    <th>Descripción</th>
+    <td>{{ vacancy[5] }}</td>
+  </tr>
+  <tr>
+    <th>Salario</th>
+    <td>{{ vacancy[6] }}</td>
+  </tr>
+  <tr>
+    <th>Empresa</th>
+    <td>{{ companies[1] }}</td>
+  </tr>
+  <tr>
+    <th>Estado</th>
+    <td>{{ vacancy[7] }}</td>
+  </tr>
+  <tr>
+    <th>Municipio</th>
+    <td>{{ vacancy[8] }}</td>
+  </tr>
+  <tr>
+    <th>Numero de vacantes</th>
+    <td>{{ vacancy[9] }}</td>
+  </tr>
+  <tr>
+    <th>Discapacidad</th>
+    <td>{{ disabilities[2] }}</td>
+  </tr>
+</table>
+<a href="{{ url_for('viewVacancies') }}">Regresar a Vacantes</a>
+
+{% endblock %}
