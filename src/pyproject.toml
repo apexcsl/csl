@@ -19,7 +19,7 @@ dependencies = [
     "datetime",
     "pymysql",
     "flask_session",
-    "redis",,
+    "redis",
     "pyotp"
 ]
 

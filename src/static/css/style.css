@@ -211,10 +211,12 @@ body{
   .about-image{
     width: 100%;
     margin: 0 190px 0 90px;
-}
+   }
   .nosotros{
       padding: 30px;
       flex-direction: column;
+      text-align:center;
+      justify-content:center;
   }
   .nosotros-img{
       width: 100%;
@@ -224,9 +226,10 @@ body{
   }
   .nos-txt{
       width: 100%;
-      padding-left: 0;
+      padding: 0 11px  0 1px ;
       text-align: center;
   }
+
   .number{
     padding: 30px;
   }
@@ -237,8 +240,10 @@ body{
     padding: 0;
   }
   .number-circle{
-    margin-bottom: 30px;
+    margin-bottom: 40px;
     padding: 10px;
+    height:700px;
+    width: 109px;
   }
   .number-circle h3{
     margin-top: 0;
@@ -554,8 +559,8 @@ span{
 }
 .number-circle{
   flex-basis: calc(33.5% - 100px);
-  height: 197px;
-  width: 150px;
+  height: 205px;
+  width: 230px;
   border: 10px solid #426c22;
   border-radius: 50%;
 }

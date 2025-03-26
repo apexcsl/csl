@@ -1,4 +1,4 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: apex_csl
 Version: 0.1.5
 Summary: A Python package for the Apex: "Camino sin Límites" project.
@@ -14,3 +14,4 @@ Requires-Dist: datetime
 Requires-Dist: pymysql
 Requires-Dist: flask_session
 Requires-Dist: redis
+Requires-Dist: pyotp
