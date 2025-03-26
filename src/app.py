@@ -732,5 +732,49 @@ def chat():
     return render_template('chat/chat.html', messages=messages)
 
 
+@app.route('/viewAplicantsOfVacancy')
+def viewAplicantsOfVacancy():
+    id_Vacancy = request.args.get("id")
+    cur = cdb.cursor
+    cur.execute('SELECT Name, Age, Email, Phone FROM Applicants WHERE ApplicantID IN (SELECT AplicantID FROM Aplications WHERE VacancyId = %s)', id_Vacancy)
+    aplicants = cur.fetchall()
+    return render_template('companies/viewAplicantsCompanies.html', id_Vacancy=id_Vacancy, aplicants=aplicants )
+
+@app.route('/aproveApplicant')
+def aproveApplicant():
+    id_Vacancy = request.args.get("id_vacancy")
+    id_Aplicant = request.args.get("id_aplicant")
+    cur=cdb.cursor
+    cur.execute('INSERT INTO Approved (VacancyID, ApplicantID) VALUES (%s, %s)', id_Vacancy, id_Aplicant)
+    cdb.conection.commit()
+    return render_template('home.html')
+
+@app.route('/RedirectApplicant', methods=['POST'])
+def redirectApplicant():
+    if session['role'] == 'company':
+        destinationVacancy=request.json
+        vacancy=destinationVacancy.get("DestinationVacancy")
+        id_Aplicant = request.args.get("id_aplicant")
+        id_vacancy = request.args.get("id_vacancy")
+        cur = cdb.cursor
+        cur.execute('SELECT ID VacancyID From Vacancies where Name = %s AND CompanyID = %s', (vacancy, session[id]))
+        cur.fetchone()
+        cur.execute('INSERT INTO Applications (ApplicantID, VacancyID, ) VALUES (%s, %s)' (id_Aplicant, destinationVacancy))
+        cur.connection.commit()
+        cur.execute('DELETE FROM applications WHERE VacancyId = %s' (id_vacancy))
+        cur.connection.commit()
+    else:
+        print("Función no acccesible por el usuario")
+    return render_template('home.html')
+    
+@app.route('/RejectApplicant')
+def RejectApplicant():
+    id_Aplicant = request.args.get("id_aplicant")
+    id_vacancy = request.args.get("id_vacancy")
+    cur=cdb.cursor
+    cur.execute('DELETE FROM applications WHERE VacancyId = %s AND ApplicantID=%s' (id_vacancy, id_Aplicant))
+    cur.connection.commit()
+    return render_template('/home')    
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True, threaded=False)

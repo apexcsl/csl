@@ -1,0 +1,76 @@
+{% extends "index.html" %} {% block content %}
+
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="/static/css/tables.css">
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+
+<div class="tb">
+    <section class="table" id="Aplicantes_Vacancy_table">
+        <div class="table__header">
+            <h1></h1>
+        </div>
+        <div class="table__body">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Id de vacante</th>
+                        <th>Nombre</th>
+                        <th>Edad</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th colspan="3">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for applicant in applicants %}
+                    <tr>
+                        <td>{{ id_Vacancy }}</td>
+                        <td>{{ applicant[1] }}</td>
+                        <td>{{ applicant[2] }}</td>
+                        <td>{{ applicant[3] }}</td>
+                        <td>{{ applicant[4] }}</td>
+                        <td><button onclick="AproveApplicants()" class="btn btn-primary">Aprobar</button></td>
+                        <td><button onclick="RedirectApplicant()" class="btn btn-primary">Redirigir</button></td>
+                        <td><button onclick="RejectApplicant()" class="btn btn-primary">Rechazar</button></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <script>
+            function AproveApplicants(id_Vacancy, id_Applicant) {
+            fetch(`/approveApplicant?id_vacancy=${id_Vacancy}&id_applicant=${id_Applicant}`, {
+                method: 'POST'  
+            })
+            .then(response => response.text())
+            .catch(error => console.error('Error:', error));
+            }
+
+            function RedirectApplicant(){
+                let DestinationVacancy = prompt("Ingrese el nombre del puesto al que desea redirigir al solicitante:")
+                if (DestinationVacancy){
+                    fetch('/RedirectApplicant', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'applications/json'
+                        },
+                        body: JSON.stringify({DestinationVacancy: DestinationVacancy})
+                    })
+                    .then(response => response.json())
+                    .then(data => alert(data.message))
+                    .catch(error => console.error('Error: ', error));
+                }
+            }
+            function RejectApplicant(){
+                fetch(`/approveApplicant?id_vacancy=${id_Vacancy}&id_applicant=${id_Applicant}`, {
+                    method: 'POST'  
+                })
+                .then(response => response.text())
+                .catch(error => console.error('Error:', error));
+            }
+        </script>
+    </section>
+</div>
+
+{% endblock %}

@@ -14,26 +14,33 @@
             <table>
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Puesto</th>
                         <th>Descripción</th>
                         <th>Salario</th>
                         <th>Empresa</th>
-                        <th colspan="3">Acciones</th>
+                        <th colspan="4">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!--
                     {% for vacancy in vacancies %}
                     <tr>
+                        <td>{{ vacancy[0] }}</td>
                         <td>{{ vacancy[1] }}</td>
                         <td>{{ vacancy[2] }}</td>
                         <td>{{ vacancy[3] }}</td>
                         <td>{{ vacancy[4] }}</td>
+                        <td><button onclick="ViewAplicantsVacancy('{{ vacancy[0] }}')" class="btn btn-primary">Ver Aplicantes</button></td>
                     </tr>
-                    {% endfor %}-->
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
+        <script>
+            function ViewAplicantsVacancy(id) {
+                window.location.href = "/viewAplicantsCompanies?id=" + id;
+            }
+        </script>
     </section>
 </div>
 

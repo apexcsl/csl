@@ -114,14 +114,30 @@ class CDB():
         except pymysql.Error as err:
             print(f"\nError al crear la tabla user: {err}")
 
+    #Función para crear la tabla Aplications
+    def createTableApplications(self):
+        try:
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS Applications (AppID Int AUTO_INCREMENT PRIMARY KEY, VacancyID INT, ApplicantID INT, uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+            print("\nTabla Applications creada con éxito")
+        except pymysql.Error as err:
+            print(f"\nError al crear la tabla Aplications: {err}")
 
-    # Funcion para crear la tabla Aprobados
+    # Funcion para crear la tabla Approved
     def createTableApproved(self):
         try:
-            self.cursor.execute("CREATE TABLE IF NOT EXISTS Approved (ApprovedID INT AUTO_INCREMENT PRIMARY KEY, CompanyID INT, DisavilityID INT, ApplicantID INT, uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
-            print("\nTabla creada con éxito")
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS Approved (ApprovedID INT AUTO_INCREMENT PRIMARY KEY, ApplicantID INT, VacancyID INT, uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+            print("\nTabla Approved creada con éxito")
         except pymysql.Error as err:
             print(f"\nError al crear la tabla user: {err}")
+
+    #Función para crear la tabla de Redirections
+    def createTableRedirections(self):
+        try:
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS Redirections (RedirectedID INT AUTO_INCREMENT PRIMARY KEY, CompanyID INT, DisavilityID INT, ApplicantID INT, OriginVacancyID INT, DestinationVacancyID INT,  uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+            print("\nTabla Redirections creada con éxito")
+        except pymysql.Error as err:
+            print(f"\nError al crear la tabla redirections: {err}")
+
     # Funcion para insertar un usuario predeterminado
     def insertUser(self, username, email, password):
         try:
@@ -159,6 +175,7 @@ class CDB():
             self.createTableVideos()
             self.createTableMessages()
             self.createTableApproved()
+            self.createTableRedirections()
             self.insertUser('AdminP', 'admin@gmail.com', 'B!1w8NAt1T^%kvhUI*S^')
             datos = [
                 ('Fisica o Motora', 'Parálisis', 'Pérdida completa o parcial de la capacidad de movimiento de una o más partes del cuerpo debido a daño en el sistema nervioso o muscular.'),
