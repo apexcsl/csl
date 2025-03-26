@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: apex_csl
-Version: 0.1.5
+Version: 0.2.7
 Summary: A Python package for the Apex: "Camino sin Límites" project.
 Author-email: Daniel Tenorio <danyjr@outlook.es>, Mayrin Reyes <mayrinreyes1707@gmail.com>
 Requires-Python: >=3.10

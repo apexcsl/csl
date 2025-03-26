@@ -90,29 +90,6 @@ class CDB():
         except pymysql.Error as err:
             print(f"\nError al crear la tabla user: {err}")
 
-    #Funcion para crear la tabla Vacantes
-    def createTableVacancies(self):
-        try:
-            self.cursor.execute("CREATE TABLE IF NOT EXISTS Vacancies (VacancyID INT AUTO_INCREMENT PRIMARY KEY, CompanyID INT, DisavilityID INT, ApplicantID INT, Name VARCHAR(255), Description VARCHAR(255), Salary VARCHAR(255), State VARCHAR(255), Municipaly VARCHAR(255), Type VARCHAR(255), uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
-            print("\nTabla creada con éxito")
-        except pymysql.Error as err:
-            print(f"\nError al crear la tabla user: {err}")
-
-    # Funcion para crear la tabla Videos
-    def createTableVideos(self):
-        try:
-            self.cursor.execute("CREATE TABLE IF NOT EXISTS Videos (VideoID INT AUTO_INCREMENT PRIMARY KEY, CompanyID INT, Name VARCHAR(255), Description VARCHAR(255), Video VARCHAR(255), uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
-            print("\nTabla creada con éxito")
-        except pymysql.Error as err:
-            print(f"\nError al crear la tabla user: {err}")
-
-    # Funcion para crear la tabla Aprobados
-    def createTableApproved(self):
-        try:
-            self.cursor.execute("CREATE TABLE IF NOT EXISTS Approved (ApprovedID INT AUTO_INCREMENT PRIMARY KEY, CompanyID INT, DisavilityID INT, ApplicantID INT, uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
-            print("\nTabla creada con éxito")
-        except pymysql.Error as err:
-            print(f"\nError al crear la tabla user: {err}")
     # Funcion para insertar un usuario predeterminado
     def insertUser(self, username, email, password):
         try:
@@ -146,9 +123,6 @@ class CDB():
             self.createTableApplicants()
             self.createTableCompanies()
             self.createTableDisabilities()
-            self.createTableVacancies()
-            self.createTableVideos()
-            self.createTableApproved()
             self.insertUser('AdminP', 'admin@gmail.com', 'B!1w8NAt1T^%kvhUI*S^')
             datos = [
                 ('Fisica o Motora', 'Parálisis', 'Pérdida completa o parcial de la capacidad de movimiento de una o más partes del cuerpo debido a daño en el sistema nervioso o muscular.'),
