@@ -1,0 +1,53 @@
+{% block content %}
+
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="/static/css/chat.css">
+
+<div class="chat-preview-container">
+  <h2>Chats</h2>
+
+  <ul class="chat-list">
+    <li class="chat-item">
+      <p><a href="/">Regresar al Inicio</a></p>
+    </li>
+
+    <li class="chat-item">
+      <p><a href="/newChat">Crear Chat</a></p>
+    </li>
+
+    {% set latest_messages = {} %}
+
+    {% for message in messages %}
+      {% set chat_key = [message[1], message[2]] | sort | join('-') %}
+      {% set latest_messages = latest_messages.update({chat_key: message}) or latest_messages %}
+    {% endfor %}
+
+    {% for chat_key, message in latest_messages.items() %}
+      {% set chat_partner = message[2] if g.user == message[1] else message[1] %}
+      <li class="chat-item">
+        <a href="/viewChat?sender={{ chat_partner }}" class="chat-link">
+          <div class="chat-avatar">
+            {% if imagenes_base64.get(chat_partner) %}
+              <img src="data:image/png;base64,{{ imagenes_base64[chat_partner] }}" alt="User Avatar" style="width: 3rem; height: 3rem;">
+            {% else %}
+              <img src="/static/images/avatar1.png" alt="User Avatar">
+            {% endif %}
+          </div>
+          <div class="chat-info">
+            <h3 class="chat-name">{{ chat_partner }}</h3>
+            <p class="chat-last-message">
+              {% if g.user == message[1] %}
+                Tú:
+              {% else %}
+                {{ message[1] }}:
+              {% endif %}
+              {{ message[3] }}
+            </p>
+          </div>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+
+{% endblock content %}

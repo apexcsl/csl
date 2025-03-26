@@ -1,0 +1,68 @@
+{% block content %}
+
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="/static/css/chat.css">
+
+<div class="chat-container">
+    <div class="chat-header">
+        <a href="/chat" class="back-icon">
+          <img src="/static/img/back-icon.svg" alt="Back" style="width: 1.5rem; height: 1.5rem; margin-right: 0.5rem;">
+        </a>
+        <div class="chat-avatar">
+          <img src="data:image/png;base64,{{ imagen_base64 }}" alt="Company Logo" style="width: 3rem; height: 3rem;">
+        </div>
+        <h2 class="chat-name">{{ sender }}</h2>
+    </div>
+
+    <div class="chat-messages">
+{% for message in messages %}
+    <div class="message {% if message[6] == 'sent' %}message-sent{% else %}message-received{% endif %}">
+        <p class="message-text">{{ message[3] }}</p>
+        <div class="message-footer">
+            <span class="message-time">{{ message[5] }}</span>
+        </div>
+    </div>
+{% endfor %}
+    </div>
+
+    <div class="chat-input-container">
+        <form id="chat-form">
+            <input type="hidden" name="recipient_userName" value="{{ sender }}">
+            <input type="text" id="message-input" name="message" class="chat-input" placeholder="Escribe tu mensaje..." required>
+            <button type="submit" class="chat-send-button">Enviar</button>
+        </form>
+    </div>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        $("#chat-form").submit(function (event) {
+            event.preventDefault(); 
+
+      
+            $.ajax({
+                url: "/sendMessage",
+                type: "POST",
+                data: $(this).serialize(), 
+                success: function (response) {
+                    if (response.error) {
+                        alert(response.error);  
+                    } else {
+                     
+                        $(".chat-messages").html(response.messages);
+                        $("#message-input").val("");  
+                    }
+                },
+                error: function () {
+                    alert("Hubo un error al enviar el mensaje.");
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock content %}

@@ -1,28 +1,57 @@
-{% extends "index.html" %}
+{% extends "index.html" %} {% block content %}
 
-{% block content %}
-<h2>Editar Admin Detalles</h2>
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="/static/css/tables.css">
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+
+
 <form method="post" action="/edit_admin/{{ admin[0] }}" enctype="multipart/form-data">
-
-  <table>
-    <tr>
-      <th>ID</th>
-      <td>{{ admin[0] }}</td>
-    </tr>
-    <tr>
-      <th>Nombre</th>
-      <td><input type="text" name="name" value="{{ admin[1] }}"></td>
-    </tr>
-    <tr>
-      <th>Email</th>
-      <td><input type="email" name="email" value="{{ admin[2] }}"></td>
-    </tr>
-    <tr>
-      <th>Uploaded At</th>
-      <td>{{ admin[4] }}</td>
-    </tr>
-  </table>
+  <section class="tb"> 
+    <section class="table" id="customers_table">
+      <div class="table__header">
+        <h1>Editar Administrador</h1>
+      </div>
+      <div class="table__body">
+        <table border="1">
+          <thead>
+            <tr>
+              <th>Foto</th>
+              <th colspan="2">Datos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td rowspan="5">
+                <img src="{{ url_for('static', filename='uploads/' + admin[3]) }}" alt="Foto de Administrador" width="200">
+              </td>
+            </tr>
+            <tr>
+              <th>ID</th>
+              <td>{{ admin[0] }}</td>
+            </tr>
+            <tr>
+              <th>Nombre</th>
+              <td><input type="text" name="name" value="{{ admin[1] }}"></td>
+            </tr>
+            <tr>
+              <th>Email</th>
+              <td><input type="email" name="email" value="{{ admin[2] }}"></td>
+            </tr>
+            <tr>
+              <th>Uploaded At</th>
+              <td>{{ admin[4] }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </section>
+  
   <button type="submit">Guardar Cambios</button>
+
 </form>
-<a href="{{ url_for('viewCompanies') }}">Regresar a Administradores</a>
+
+<a href="{{ url_for('viewAdmins') }}">Regresar a Administradores</a>
+
 {% endblock %}

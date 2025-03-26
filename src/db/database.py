@@ -61,15 +61,15 @@ class CDB():
     # Funcion para crear la tabla Admins
     def createTableAdmins(self):
         try:
-            self.cursor.execute("CREATE TABLE IF NOT EXISTS Admins (AdminID INT AUTO_INCREMENT PRIMARY KEY, Username VARCHAR(255), Email VARCHAR(255), EncryptedPassword VARCHAR(255), uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS Admins (AdminID INT AUTO_INCREMENT PRIMARY KEY, Username VARCHAR(255), Email VARCHAR(255), EncryptedPassword VARCHAR(255), profilePhoto LONGBLOB, Type VARCHAR(50), uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
             print("\nTabla creada con éxito")
         except pymysql.Error as err:
             print(f"\nError al crear la tabla user: {err}")
-    
+     
     # Funcion para crear la tabla Applicants
     def createTableApplicants(self):
         try:
-            self.cursor.execute("CREATE TABLE IF NOT EXISTS Applicants (ApplicantID INT AUTO_INCREMENT PRIMARY KEY, UserName VARCHAR(255), Name VARCHAR(255), Firstname VARCHAR(255), Secname VARCHAR(255), Email VARCHAR(255), EncryptedPasswdA VARCHAR(255), Age INT, Phone VARCHAR(255), Address VARCHAR(255), State VARCHAR(255), Municipaly VARCHAR(255), Cv_Name VARCHAR(255), Cv_Data  LONGBLOB, EmergencyContact VARCHAR(255), Related VARCHAR(255), DisabilityID INT,  uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS Applicants (ApplicantID INT AUTO_INCREMENT PRIMARY KEY, UserName VARCHAR(255), Name VARCHAR(255), Firstname VARCHAR(255), Secname VARCHAR(255), Email VARCHAR(255), EncryptedPasswdA VARCHAR(255), profilePhoto LONGBLOB, Type VARCHAR(50), Age INT, Phone VARCHAR(255), Address VARCHAR(255), State VARCHAR(255), Municipaly VARCHAR(255), Cv_Name VARCHAR(255), Cv_Data  LONGBLOB, EmergencyContact VARCHAR(255), Related VARCHAR(255), DisabilityID INT,  uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
             print("\nTabla creada con éxito")
         except pymysql.Error as err:
             print(f"\nError al crear la tabla user: {err}")
@@ -77,7 +77,7 @@ class CDB():
     # Funcion para crear la tabla Companies
     def createTableCompanies(self):
         try:
-            self.cursor.execute("CREATE TABLE IF NOT EXISTS Companies (CompanyID INT AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255), Email VARCHAR(255), EncryptedPasswdC VARCHAR(255), Phone VARCHAR(255), Address VARCHAR(255), State VARCHAR(255), Municipaly VARCHAR(255), Description VARCHAR(255), RFC VARCHAR(255), Logo LONGBLOB, Type VARCHAR(50), uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS Companies (CompanyID INT AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255), Email VARCHAR(255), EncryptedPasswdC VARCHAR(255), Phone VARCHAR(255), Address VARCHAR(255), State VARCHAR(255), Municipaly VARCHAR(255), Description VARCHAR(255), RFC VARCHAR(255), profilePhoto LONGBLOB, Type VARCHAR(50), uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
             print("\nTabla creada con éxito")
         except pymysql.Error as err:
             print(f"\nError al crear la tabla user: {err}")
@@ -105,6 +105,15 @@ class CDB():
             print("\nTabla creada con éxito")
         except pymysql.Error as err:
             print(f"\nError al crear la tabla user: {err}")
+
+    # Funcion para crear la tabla Messages
+    def createTableMessages(self):
+        try:
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS Messages (MessageID INT AUTO_INCREMENT PRIMARY KEY, SenderUserName VARCHAR(255), RecipientUserName VARCHAR(255), Message TEXT, Status VARCHAR(255), uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+            print("\nTabla mensajes creada con éxito")
+        except pymysql.Error as err:
+            print(f"\nError al crear la tabla user: {err}")
+
 
     # Funcion para crear la tabla Aprobados
     def createTableApproved(self):
@@ -136,6 +145,7 @@ class CDB():
             self.createTableDisabilities()
             self.createTableVacancies()
             self.createTableVideos()
+            self.createTableMessages()
             self.createTableApproved()
             datos = [
                 ('Fisica o Motora', 'Parálisis', 'Pérdida completa o parcial de la capacidad de movimiento de una o más partes del cuerpo debido a daño en el sistema nervioso o muscular.'),
