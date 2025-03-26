@@ -80,7 +80,7 @@
     {% endfor %}
   </tbody>
 </table>
-{% if session['role'] == 'superadmin' or session['role'] == 'admin' %}
+{% if session['role'] == 'superadmin' or session['role'] == 'admin' or session['role'] == 'company' %}
 <a href="{{ url_for('createVacancy') }}">Agregar Vacante</a>
 {% endif %}
 <br>
