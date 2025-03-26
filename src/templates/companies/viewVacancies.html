@@ -76,7 +76,7 @@
           {% endfor %}
           <td>
             <a href="{{ url_for('details_vacancies', vacancy_id=vacancy[0]) }}">Detalles</a>
-            <a href="{{ url_for('aplicateApplicants', vacancy_id=vacancy[0]) }}">Aplicar</a>
+            <a href="{{ url_for('aplicate', vacancy_id=vacancy[0]) }}">Aplicar</a>
           </td>
         </tr>
       {% endif %}
