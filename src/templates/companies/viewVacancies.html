@@ -1,5 +1,40 @@
-{% extends "index.html" %}
+{% extends "index.html" %} {% block content %}
 
-{% block content %}
-vacantes
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="/static/css/tables.css">
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+
+<div class="tb">
+    <section class="table" id="customers_table">
+        <div class="table__header">
+            <h1></h1>
+        </div>
+        <div class="table__body">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Puesto</th>
+                        <th>Descripción</th>
+                        <th>Salario</th>
+                        <th>Empresa</th>
+                        <th colspan="3">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--
+                    {% for vacancy in vacancies %}
+                    <tr>
+                        <td>{{ vacancy[1] }}</td>
+                        <td>{{ vacancy[2] }}</td>
+                        <td>{{ vacancy[3] }}</td>
+                        <td>{{ vacancy[4] }}</td>
+                    </tr>
+                    {% endfor %}-->
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
 {% endblock %}

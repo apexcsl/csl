@@ -1,69 +1,106 @@
 {% extends "index.html" %} {% block content %}
-<h2>Applicant Details</h2>
-<table>
-  {%if session['role'] == 'superadmin' or session['role'] == 'admin' %}
-  <tr>
-    <th>ID</th>
-    <td>{{ applicant[0] }}</td>
-  </tr>
-  {% endif %}
-  <tr>
-    <th>Usuario</th>
-    <td>{{ applicant[1] }}</td>
-  </tr>
-  <tr>
-    <th>Nombre</th>
-    <td>{{ applicant[2] }}</td>
-  </tr>
-  <tr>
-  <tr>
-    <th>Primer Apellido</th>
-    <td>{{ applicant[3] }}</td>
-  </tr>
-  <tr>
-    <th>Segundo Apellido</th>
-    <td>{{ applicant[4] }}</td>
-  </tr>
-    <th>Email</th>
-    <td>{{ applicant[5] }}</td>
-  </tr>
-  <tr>
-    <th>Edad</th>
-    <td>{{ applicant[7] }}</td>
-  </tr>
-  <tr>
-    <th>Telefono</th>
-    <td>{{ applicant[8] }}</td>
-  </tr>
-  <tr>
-    <th>Dirección</th>
-    <td>{{ applicant[9] }}</td>
-  </tr>
-  <tr>
-    <th>Estado</th>
-    <td>{{ applicant[10] }}</td>
-  </tr>
-  <tr>
-    <th>Municipio</th>
-    <td>{{ applicant[11] }}</td>
-  </tr>
-  <tr>
-    <th>Contacto de Emergencia</th>
-    <td>{{ applicant[14] }}</td>
-  </tr>
-  <tr>
-    <th>Parentezco</th>
-    <td>{{ applicant[15] }}</td>
-    </tr>
-  <tr>
-    <tr>
-      <th>Discapacidad</th>
-      <td>{{ disabilities[2] }}</td>
-      </tr>
-    <tr>
-    <th>Uploaded At</th>
-    <td>{{ applicant[17] }}</td>
-  </tr>
-</table>
+
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="/static/css/tables.css">
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+
+
+<section class="tb">
+  <section class="table" id="customers_table">
+    <div class="table__header">
+      <h1>Detalles de Solicitante</h1>
+    </div>
+    <div class="table__body">
+      <table border="1">
+        <thead>
+          <th>Foto</th>
+          <th colspan="2">Datos</th>
+        </thead>
+        <tbody>
+          <tr>
+            {%if session['role'] == 'superadmin' or session['role'] == 'admin' %}
+              <td rowspan="15">
+                img
+              </td>
+            {%else%}
+              <td rowspan="7">
+              img
+            </td>
+            {% endif %}
+          </tr>
+          {%if session['role'] == 'superadmin' or session['role'] == 'admin' %}
+            <tr>
+              <th>ID</th>
+              <td>{{ applicant[0] }}</td>
+            </tr>
+            <tr>
+              <th>Usuario</th>
+              <td>{{ applicant[1] }}</td>
+            </tr>
+          {% endif %}
+          <tr>
+            <th>Nombre</th>
+            <td>{{ applicant[2] }}</td>
+          </tr>
+          <tr>
+          <tr>
+            <th>Primer Apellido</th>
+            <td>{{ applicant[3] }}</td>
+          </tr>
+          <tr>
+            <th>Segundo Apellido</th>
+            <td>{{ applicant[4] }}</td>
+          </tr>
+            <th>Email</th>
+            <td>{{ applicant[5] }}</td>
+          </tr>
+          <tr>
+            <th>Edad</th>
+            <td>{{ applicant[7] }}</td>
+          </tr>
+          <tr>
+            <th>Telefono</th>
+            <td>{{ applicant[8] }}</td>
+          </tr>
+          {%if session['role'] == 'superadmin' or session['role'] == 'admin' %}
+            <tr>
+              <th>Dirección</th>
+              <td>{{ applicant[9] }}</td>
+            </tr>
+            <tr>
+              <th>Estado</th>
+              <td>{{ applicant[10] }}</td>
+            </tr>
+            <tr>
+              <th>Municipio</th>
+              <td>{{ applicant[11] }}</td>
+            </tr>
+            <tr>
+              <th>Contacto de Emergencia</th>
+              <td>{{ applicant[14] }}</td>
+            </tr>
+            <tr>
+              <th>Parentezco</th>
+              <td>{{ applicant[15] }}</td>
+            </tr>
+          {% endif %}
+          
+          <tr>
+            <th>Discapacidad</th>
+            <td>{{ disabilities[2] }}</td>
+          </tr>
+          {%if session['role'] == 'superadmin' or session['role'] == 'admin' %}
+            <tr>
+              <th>Uploaded At</th>
+              <td>{{ applicant[17] }}</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </section> 
+</section>
+
 <a href="{{ url_for('viewApplicants') }}">Regresar a Applicantes</a>
 {% endblock %}

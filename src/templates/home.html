@@ -2,18 +2,19 @@
 
 {% block content %}
     
-    <header id="home">
-        <div class="header-container container">
+    <header class="header">
+        <div class="header-content container" id="header-content">
             <div class="header-txt">
-                <h1>Camino sin Limites</h1>
+                <h1>Camino sin <br> <span>Limites</span></h1>
                 <p>
-                    Página web de recursos humanos.
-                    <a href="{{ url_for('download_pdf', file_id=1) }}" class="btn btn-primary">Download</a>
+                    lorem ipsum dolor sit amet, consectetur adipiscing elit. sed do eiusmod tempor incididunt
                 </p>
-                <a href="" class="btn-1">Informacion</a>
+                <div class="buttons">
+                    <a href="#" class="btn-1"> Informacion </a>
+                </div>
             </div>
             <div class="header-img">
-                <img src="/static/img/header-img.png" alt="">
+                <img src="static/img/h1.png" alt="">
             </div>
         </div>
     </header>
@@ -59,23 +60,19 @@
 
         <button class="btn" id="loginBtn"><a href="/viewVacancies">Ver Vacantes</a></button>
 
-    {% else %}
+    {% else %} <!--Contenido para usuarios no registrados-->
 
-        <h1 class="seccion-header">Contenido para usuarios no registrados</h1>
-
-        <section class="nosotros">
-            <div class="nos-content container">
-                <div class="nosotros-img">
-                    <img src="https://i.pinimg.com/236x/ef/bf/02/efbf021b8f27a12040b768298dd25b80.jpg" alt="">
-                </div>
-                <div class="nos-txt">
-                    <h2>Nosotros</h2>
-                    <p>
-                        Esta es una página web guiada a faciliar la forma en la que se busca trabajo,
-                        en este caso sera guiado a las personas que tengan algun tipo de discapacidad
-                        puedan encontrar un trabajo dependiendo sus habilidades y sus limitaciones.
-                    </p>
-                </div>
+        <section class="nosotros container">
+            <div class="nosotros-img">
+                <img src="https://i.pinimg.com/236x/ee/a8/fa/eea8facd472c650aa2467fbe96e86141.jpg" alt="">
+            </div>
+            <div class="nos-txt">
+                <h2>Nosotros</h2>
+                <p>
+                    Esta es una página web guiada a faciliar la forma en la que se busca trabajo,
+                    en este caso sera guiado a las personas que tengan algun tipo de discapacidad
+                    puedan encontrar un trabajo dependiendo sus habilidades y sus limitaciones.
+                </p>
             </div>
         </section>
 
@@ -117,48 +114,47 @@
                 </div>
             </div>
         </section>
-    
-        <section class="seccion-container about__container" id="about">
-            <p class="section__subheader">Saber mas</p>
-            <h2 class="seccion-header">Información sobre nosotros</h2>
-            <div class="about__row">
-                <div class="about__image">
-                    <img src="https://i.pinimg.com/236x/2c/94/b9/2c94b9d17a6e9f4f474d0d75287615f1.jpg" alt="about" />
-                </div>
-                <div class="about__content">
-                    <h4>Proyecto</h4>
+
+        <section class="about">
+            <div class="about-content container">
+                <div class="about-txt">
+                    <h2>Informacion sobre nosotros <br> <span>Proyecto</span></h2>
                     <p>
                         Nuestro proyecto se esta enfocando en el desempeño del area laboral y el crecimiento
                         en el ámbito profesional del solicitante, haciendo mas facil la busqueda de empleos. Para
                         las empresas buscamos que sea mas rápida y organizada la forma de selección.
                     </p>
                 </div>
-            </div>
-            <div class="about__row">
-                <div class="about__image">
-                    <img src="https://i.pinimg.com/236x/e9/6c/7b/e96c7b2f40de9c748b24e39e983efc93.jpg" alt="about" />
+                <div class="about-image">
+                    <img src="https://i.pinimg.com/236x/f7/6c/73/f76c73d7d8e60bd090e887d303624a76.jpg" alt="">
                 </div>
-                <div class="about__content">
-                    <h4>Selección</h4>
+            </div>
+            <div class="about-content container">
+                <div class="about-image1">
+                    <img src="https://i.pinimg.com/236x/4a/7d/0d/4a7d0dfae5e11fa6d3175af964806857.jpg" alt="">
+                </div>
+                <div class="about-txt">
+                    <h3>Seleccion</h3>
                     <p>
                         Creamos una forma de que la selección de empleados sea fácil para las empresas dependiendo de las habilidades y limitaciones que tienen los solicitantes y las habilidadesd que se requieren para el puesto.
                     </p>
                 </div>
             </div>
-            <div class="about__row">
-                <div class="about__image">
-                    <img src="https://i.pinimg.com/236x/b5/58/fe/b558fe76a5e9f945df34a94f13893ee4.jpg" alt="about" />
-                </div>
-                <div class="about__content">
-                    <h4>Discapacidades</h4>
+            <div class="about-content container">
+                <div class="about-txt">
+                    <h3>Discapacidades</h3>
                     <p>
                         Ofrecemos informacion sobre las discacidades para crear conciencia en lo que pueden afectar
                         y como pueden limitar la oportunidad de opciones.
                     </p>
                 </div>
+                <div class="about-image">
+                    <img src="https://i.pinimg.com/236x/e0/00/7e/e0007e88e992698c7aa92429a800a0cb.jpg" alt="">
+                </div>
             </div>
         </section>
-    
+   
+
     
         <section class="seccion-container dis__container">
             <h2 class="seccion-header">DISCAPACIDADES</h2>

@@ -3,7 +3,10 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta  content="text/html; charset=utf-8" />
+    <meta lang="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=7">
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="https://unpkg.com/browse/swiper@11.1.14/swiper-bundle.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -11,37 +14,40 @@
     <title>Apex:CSL</title>
 </head>
 <body>
-    <nav>
-        <div class="nav__header">
-            <div class="logo">
-                <a href="#">Apex</a>
-            </div>
-            <div class="nav__menu__btn" id="menu-btn">
-                <i class="ri-menu-line"></i>
-            </div>
-        </div>
-        <ul class="nav__links" id="nav-links">
-            <li><a href="/home">Inicio</a></li>
-            <li><a href="#about">Saber Mas</a></li>
-            <li><a href="#service">Servicios</a></li>
-            <li><a href="#contact">Contactos</a></li>
-        </ul>
-        <div class="nav-button">
-            {% if g.user %}
-                <div class="profile-menu">
-                    <button class="btn profile-btn" id="profileBtn">{{ g.user }}</button>
-                    <div class="profile-dropdown" id="profileDropdown">
-                        <a href="/myProfile">Mi Perfil</a>
-                        <a href="/logout">Cerrar Sesión</a>
-                    </div>
-                </div>
-            {% else %}
-                <button class="btn" id="loginBtn"><a href="/login">Iniciar Sesión</a></button>
-                <button class="btn" id="registrarBtn"><a href="/register">Registrarme</a></button>
-            {% endif %}
-        </div>
-    </nav>
+    
+    <div class="menu container">
+        <a href="" class="logo">Apex</a>
+        <input type="checkbox" id="menu">
+        <label for="menu">
+            <i class='bx bx-menu'></i>
+        </label>
+        <nav class="navbar">
+            <ul>
+                <li><a href="/home">Inicio</a></li>
+                <li><a href="#about">Saber Mas</a></li>
 
+
+                
+                <li><a href="#service">Servicios</a></li>
+                <li><a href="#contact">Contactos</a></li>
+                
+                {% if g.user %}
+                    <div class="nav-button">
+                        <div class="profile-menu">
+                            <button class="btn profile-btn" id="profileBtn">{{ g.user }}</button>
+                            <div class="profile-dropdown" id="profileDropdown">
+                                <a href="/myProfile">Mi Perfil</a>
+                                <a href="/logout">Cerrar Sesión</a>
+                            </div>
+                        </div>
+                {% else %}
+                        <li><a href="/login" class="login-btn" >Login</a></li>
+                    
+                    </div>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
 
 
     {% block content %}
@@ -60,64 +66,74 @@
     <footer class="footer">
 
         <section class="footer__content">
-
+  
             <div class="footer__main">
                 <a href="#" class="footer__logo-link">
                     <img src="./assets/logo-white.svg" class="footer__logo">
                 </a>
-
+  
                 <nav class="footer__links">
                     <a href="#" class="footer__link">Sobre Nosotros</a>
                     <a href="/statistics" class="footer__link">Estadísticas</a>
                     <a href="/faq" class="footer__link">Preguntas Frecuentes</a>
                     <a href="#" class="footer__link">Contacto</a>
                 </nav>
-
+  
                 <article class="footer__contact">
                     <h4 id="contact" class="footer__copy">Contactanos:</h4>
-
+  
                     <p class="footer__info">
                         Email: apexcsl155@gmail.com
                     </p>
-
+  
                     <p class="footer__info">
                         Telefono: 449 970 8019
                     </p>
-
+  
                     <p class="footer__info">
                         Dirección: Av Perseo 301, Primo Verdad Inegi, 20267 Aguascalientes, Ags.
                     </p>
                 </article>
-
+  
                 <form class="footer__newsletter">
                     <input type="email" placeholder="Comentario" class="footer__coment">
                     <input type="submit" value="Enviar" class="footer__submit">
                 </form>
-
+  
                 <nav class="footer__social">
-
+  
                     <a href="#" class="footer__social-links">
                         <i class='bx bxl-instagram footer__media'></i>
                     </a>
-
+  
                     <a href="#" class="footer__social-links">
                         <i class='bx bxl-facebook-circle footer__media'></i>
                     </a>
-
+  
                     <a href="#" class="footer__social-links">
-                        <img src="./assets/twitter.svg" class="footer__media">
+                      <i class='bx bxl-twitter footer__media' ></i>
                     </a>
-
+  
                 </nav>
-
+  
             </div>
         </section>
-
+  
     </footer>
-    <!--pie de pagina-->
 
-    <script src="https://unpkg.com/browse/swiper@11.1.14/swiper-bundle.js"></script>
-    <script src="/static/js/main.js"></script>
+
+
+    <script>
+        window.addEventListener('scroll', function() {
+            const headerTxt = document.querySelector('.header-txt');
+            const menu = document.querySelector('.menu');
+            if (window.scrollY > menu.offsetHeight) {
+                headerTxt.classList.add('hidden');
+            } else {
+                headerTxt.classList.remove('hidden');
+            }
+        });
+    </script>
+
 </body>
-<p>&copy; <%: DateTime.Now.Year %> Camino sin Límites. Todos los derechos reservados.</p>
 </html>
