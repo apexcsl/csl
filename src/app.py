@@ -1031,5 +1031,12 @@ def redirectApplicant():
     cur.connection.commit()
     return render_template('home.html')
 
+@app.route('/Aplicate', methods=['GET'])
+def aplicate(vacancy_id):
+    cur = cdb.cursor
+    cur.execute('INSERT INTO Applications (ApplicantID, VacancyID, ) VALUES (%s, %s)', (session[id], vacancy_id))
+    cur.connection.commit()
+    return render_template('home.html')
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True, threaded=False)
