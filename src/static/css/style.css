@@ -213,20 +213,22 @@ body{
     margin: 0 190px 0 90px;
    }
   .nosotros{
-      padding: 30px;
+      padding: 20px;
       flex-direction: column;
-      text-align:center;
-      justify-content:center;
+      align-items: center;
   }
   .nosotros-img{
       width: 100%;
+      display: flex;
+      justify-content: center;
   }
   .nosotros-img img{
-      width: 100%;
+    width: 100%; 
+    max-width: 1200px;
   }
   .nos-txt{
       width: 100%;
-      padding: 0 11px  0 1px ;
+      padding-left: 0;
       text-align: center;
   }
 
