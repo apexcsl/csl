@@ -7,28 +7,32 @@
   <h2>Chats</h2>
 
   <ul class="chat-list">
-
     <li class="chat-item">
       <p><a href="/">Regresar al Inicio</a></p>
     </li>
-
 
     <li class="chat-item">
       <p><a href="/newChat">Crear Chat</a></p>
     </li>
 
-    {% set latest_messages = {} %}  {# Diccionario para almacenar el último mensaje de cada chat #}
+    {% set latest_messages = {} %}
 
     {% for message in messages %}
-      {% set chat_key = [message[1], message[2]] | sort | join('-') %} {# Crear clave única #}
-      {% set latest_messages = latest_messages.update({chat_key: message}) or latest_messages %} {# Almacenar solo el último mensaje #}
+      {% set chat_key = [message[1], message[2]] | sort | join('-') %}
+      {% set latest_messages = latest_messages.update({chat_key: message}) or latest_messages %}
     {% endfor %}
 
     {% for chat_key, message in latest_messages.items() %}
       <li class="chat-item">
         <a href="/viewChat?sender={% if g.user == message[1] %}{{ message[2] }}{% else %}{{ message[1] }}{% endif %}" class="chat-link">
           <div class="chat-avatar">
-            <img src="/static/images/avatar1.png" alt="User Avatar">
+            {% if imagenes_base64.get(message[1]) %}
+              <img src="data:image/png;base64,{{ imagenes_base64[message[1]] }}" alt="User Avatar" style="width: 3rem; height: 3rem;">
+            {% elif imagenes_base64.get(message[2]) %}
+              <img src="data:image/png;base64,{{ imagenes_base64[message[2]] }}" alt="User Avatar" style="width: 3rem; height: 3rem;">
+            {% else %}
+              <img src="/static/images/avatar1.png" alt="User Avatar">
+            {% endif %}
           </div>
           <div class="chat-info">
             <h3 class="chat-name">

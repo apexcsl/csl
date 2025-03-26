@@ -5,8 +5,11 @@
 
 <div class="chat-container">
     <div class="chat-header">
+        <a href="/chat" class="back-icon">
+          <img src="/static/img/back-icon.svg" alt="Back" style="width: 1.5rem; height: 1.5rem; margin-right: 0.5rem;">
+        </a>
         <div class="chat-avatar">
-            <img src="/static/images/avatar1.png" alt="User Avatar">
+          <img src="data:image/png;base64,{{ imagen_base64 }}" alt="Company Logo" style="width: 3rem; height: 3rem;">
         </div>
         <h2 class="chat-name">{{ sender }}</h2>
     </div>
@@ -17,17 +20,6 @@
         <p class="message-text">{{ message[3] }}</p>
         <div class="message-footer">
             <span class="message-time">{{ message[5] }}</span>
-            {% if message[6] == 'sent' %}
-                <span class="message-status">
-                    {% if message[4] == 'undelivered' %}
-                        ✓
-                    {% elif message[4] == 'delivered' %}
-                        ✓✓
-                    {% elif message[4] == 'read' %}
-                        ✓✓ (read)
-                    {% endif %}
-                </span>
-            {% endif %}
         </div>
     </div>
 {% endfor %}
