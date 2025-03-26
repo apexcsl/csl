@@ -1,31 +1,60 @@
-{% extends "index.html" %} 
-{% block content %}
-<h2>Discapacidades</h2>
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Categoria</th>
-            <th>Descripcion</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for disabilities in disabilities %}
-            <tr>
-                <td>{{ disabilities[0] }}</td>
-                <td>{{ disabilities[2] }}</td>
-                <td>{{ disabilities[1] }}</td>
-                <td>{{ disabilities[3] }}</td>  
-                <td>
-                    <a href="{{ url_for('editDisabilityForm', disability_id=disabilities[0]) }}">Editar</a>
-                    <a href="{{ url_for('delete_disability', disability_id=disabilities[0]) }}">Eliminar</a>
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% extends "index.html" %}  {% block content %}
+
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="/static/css/tables.css">
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+
+<div class="tb">
+    <section class="table" id="customers_table">
+        <div class="table__header">
+            <h1>Discapacidades</h1>
+        </div>
+        <div class="table__body">
+            <table>
+                <thead>
+                    <tr>
+                        {% if session['role'] == 'superadmin' or session['role'] == 'admin' %}
+                            <th>ID</th>
+                        {% endif %}
+
+                        <th>Nombre</th>
+                        <th>Categoria</th>
+                        <th>Descripcion</th>
+
+                        {% if session['role'] == 'superadmin' or session['role'] == 'admin' %}
+                            <th colspan="2">Acciones</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for disabilities in disabilities %}
+                        <tr>
+                            <td>{{ disabilities[0] }}</td>
+                            <td>{{ disabilities[2] }}</td>
+                            <td>{{ disabilities[1] }}</td>
+                            <td>{{ disabilities[3] }}</td>  
+                            {% if session['role'] == 'superadmin' or session['role'] == 'admin' %}
+                                <td>
+                                    <p class="status delivered">
+                                        <a href="{{ url_for('editDisabilityForm', disability_id=disabilities[0]) }}">Editar</a>
+                                    </p>
+                                </td>
+                                <td>
+                                    <p class="status cancelled">
+                                        <a href="{{ url_for('delete_disability', disability_id=disabilities[0]) }}">Eliminar</a>
+                                    </p>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+
 
 <a href="{{ url_for('home') }}">Regresar a Menu</a>
 
