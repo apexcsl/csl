@@ -1023,7 +1023,7 @@ def redirectApplicant():
     id_Aplicant = request.args.get("id_aplicant")
     id_vacancy = request.args.get("id_vacancy")
     cur = cdb.cursor
-    cur.execute('SELECT ID VacancyID From Vacancies where Name = %s AND CompanyID = %s', (vacancy, session[id]))
+    cur.execute('SELECT ID VacancyID From Vacancies where Name = %s AND CompanyID = %s', (vacancy, session['id']))
     cur.fetchone()
     cur.execute('INSERT INTO Applications (ApplicantID, VacancyID, ) VALUES (%s, %s)' (id_Aplicant, destinationVacancy))
     cur.connection.commit()
@@ -1031,12 +1031,12 @@ def redirectApplicant():
     cur.connection.commit()
     return render_template('home.html')
 
-@app.route('/Aplicate', methods=['GET'])
+@app.route('/Aplicate/<int:vacancy_id>', methods=['GET'])
 def aplicate(vacancy_id):
     cur = cdb.cursor
-    cur.execute('INSERT INTO Applications (ApplicantID, VacancyID, ) VALUES (%s, %s)', (session[id], vacancy_id))
+    cur.execute('INSERT INTO Applications (ApplicantID, VacancyID ) VALUES (%s, %s)', (session['id'], vacancy_id))
     cur.connection.commit()
-    return render_template('home.html')
+    return redirect(url_for('viewVacancies'))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True, threaded=False)
