@@ -642,7 +642,41 @@ def delete_vacancy(vacancy_id):
     cdb.conection.commit()
     return redirect(url_for('viewVacancies'))
 
+@app.route('/viewApplicantsVacancy/<int:vacancy_id>', methods=['GET'])
+def viewApplicantsVacancy(vacancy_id):
+    cur =cdb.cursor
+    cur.execute('SELECT ApplicantID, Name, Age, Email, Phone FROM Applicants WHERE ApplicantID IN (SELECT ApplicantID FROM Applications WHERE VacancyId = %s)', vacancy_id)
+    applicants=cur.fetchall()
+    return render_template('companies/viewApplicantsCompanies.html', vacancy_id=vacancy_id, applicants=applicants)
 
+@app.route('/acceptApplicant/<int:Vacancy_id>, <int:Applicant_id>')
+def acceptApplicant(vacancy_id, applicant_id):
+    cur=cdb.cursor
+    cur.execute('INSERT INTO Approved (VacancyID, ApplicantID) VALUES (%s, %s)', vacancy_id, applicant_id)
+    cur.connection.commit()
+    return render_template('/home')
+
+@app.route('/rejectApplicant/<int:Vacancy_id>, <int:Applicant_id>')
+def rejectApplicant(vacancy_id, applicant_id):
+    cur = cdb.cursor
+    cur.execute('DELETE FROM Applications WHERE VacancyID = %s AND ApplicantID = %s', vacancy_id, applicant_id)
+    cur.connection.commit()
+    return render_template('/home')
+
+@app.route('/RedirectApplicant', methods=['POST'])
+def redirectApplicant():
+    destinationVacancy=request.json
+    vacancy=destinationVacancy.get("DestinationVacancy")
+    id_Aplicant = request.args.get("id_aplicant")
+    id_vacancy = request.args.get("id_vacancy")
+    cur = cdb.cursor
+    cur.execute('SELECT ID VacancyID From Vacancies where Name = %s AND CompanyID = %s', (vacancy, session[id]))
+    cur.fetchone()
+    cur.execute('INSERT INTO Applications (ApplicantID, VacancyID, ) VALUES (%s, %s)' (id_Aplicant, destinationVacancy))
+    cur.connection.commit()
+    cur.execute('DELETE FROM Applications WHERE VacancyId = %s' (id_vacancy))
+    cur.connection.commit()
+    return render_template('home.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
