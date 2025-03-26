@@ -1,5 +1,6 @@
-{% extends "index.html" %} {% block content %}
+{% block content %}
 
+<link rel="stylesheet" href="/static/css/style.css">
 <link rel="stylesheet" href="/static/css/tables.css">
 
 <h2>Vacantes</h2>
@@ -86,6 +87,6 @@
 <a href="{{ url_for('createVacancy') }}">Agregar Vacante</a>
 {% endif %}
 <br>
-<a href="{{ url_for('home') }}">Regresar a Inicio</a>
+<a href="{{ url_for('home') }}" class="back-icon"><img src="/static/img/back-icon.svg" alt="Back" style="width: 1.5rem; height: 1.5rem; margin-right: 0.5rem;">Regresar a Inicio</a>
 
 {% endblock %}

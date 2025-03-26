@@ -1,4 +1,6 @@
-{% extends "index.html" %} {% block content %}
+{% block content %}
+
+<link rel="stylesheet" href="/static/css/style.css">
 <h2>Vacante</h2>
 <table>
   {% if session['role'] == 'superadmin' or session['role'] == 'admin' %}
@@ -40,6 +42,6 @@
     <td>{{ disabilities[2] }}</td>
   </tr>
 </table>
-<a href="{{ url_for('viewVacancies') }}">Regresar a Vacantes</a>
+<a href="{{ url_for('viewVacancies') }}" class="back-icon"><img src="/static/img/back-icon.svg" alt="Back" style="width: 1.5rem; height: 1.5rem; margin-right: 0.5rem;">Regresar a Vacantes</a>
 
 {% endblock %}
