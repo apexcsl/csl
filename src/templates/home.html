@@ -7,7 +7,7 @@
             <div class="header-txt">
                 <h1>Camino sin <br> <span>Limites</span></h1>
                 <p>
-                    lorem ipsum dolor sit amet, consectetur adipiscing elit. sed do eiusmod tempor incididunt
+                    "Abriendo caminos, rompiendo límites."
                 </p>
                 <div class="buttons">
                     <a href="#" class="btn-1"> Informacion </a>
@@ -19,48 +19,63 @@
         </div>
     </header>
 
-    {% if session['role'] == 'superadmin' %}
 
-        <h1 class="seccion-header">Contenido exclusivo para super administrador</h1>
+    <div style="text-align: center;">
+        {% if session['role'] == 'superadmin' %}
 
-        <button class="btn" id="loginBtn"><a href="/viewAdmins">Ver Administradores</a></button>
+            <h1 class="seccion-header">Contenido exclusivo para super administrador</h1>
 
-        <button class="btn" id="loginBtn"><a href="/viewCompanies">Ver Empresas</a></button>
+            <div class="buttons">
+                <center>
+                <button class="btn-1"><a href="/viewAdmins">Ver Administradores</a></button>
+                <button class="btn-1"><a href="/viewCompanies">Ver Empresas</a></button>
+                <button class="btn-1"><a href="/viewApplicants">Ver Solicitantes</a></button>
+                <button class="btn-1"><a href="/viewVacancies">Ver Vacantes</a></button>
+                <button class="btn-1"><a href="/viewDisabilities">Ver Discapacidades</a></button>
+                <button class="btn-1"><a href="/chat">Chat</a></button>
+                </center>
+            </div>
 
-        <button class="btn" id="loginBtn"><a href="/viewApplicants">Ver Solicitantes</a></button>
+        {% elif session['role'] == 'admin' %}
+        
+            <h1 class="seccion-header">Bienvenido administrador</h1>    
 
-        <button class="btn" id="loginBtn"><a href="/viewVacancies">Ver Vacantes</a></button>
+            <div class="buttons">
+                <center>
+                <button class="btn-1"><a href="/viewCompanies">Ver Empresas</a></button>
+                <button class="btn-1"><a href="/viewApplicants">Ver Solicitantes</a></button>
+                <button class="btn-1"><a href="/viewDisabilities">Ver Discapacidades</a></button>
+                <button class="btn-1"><a href="/chat">Chat</a></button>
 
-        <button class="btn" id="loginBtn"><a href="/viewDisabilities">Ver Discapacidades</a></button>
+                </cemter>
+            </div>
+        
+        {% elif session['role'] == 'company' %}
+        
+            <h1 class="seccion-header">Bienvenido al menú de compañia</h1>  
 
-    {% elif session['role'] == 'admin' %}
-    
-        <h1  class="seccion-header">Bienvenido administrador</h1>    
+            <div class="buttons">
+                <center>
+                <button class="btn-1"><a href="/viewVacancies">Ver Vacantes</a></button>
+                <button class="btn-1"><a href="/viewVideos">Ver Videos</a></button>
+                <button class="btn-1"><a href="/chat">Chat</a></button>
 
-        <button class="btn" id="loginBtn"><a href="/viewCompanies">Ver Empresas</a></button>
+                </cenbter>
+            </div>
+        
+        {% elif session['role'] == 'applicant' %}
+        
+            <h1 class="seccion-header">Bienvenido al menú de solicitantes</h1>  
 
-        <button class="btn" id="loginBtn"><a href="/viewApplicants">Ver Solicitantes</a></button>
+            <div class="buttons">
+                <button class="btn-1"><a href="/viewCompanies">Ver Empresas</a></button>
+                <button class="btn-1"><a href="/viewVacancies">Ver Vacantes</a></button>
+                <button class="btn-1"><a href="/chat">Chat</a></button>
 
-        <button class="btn" id="loginBtn"><a href="/viewDisabilities">Ver Discapacidades</a></button>
+            </div>
 
-    
-    {% elif session['role'] == 'company' %}
-    
-        <h1  class="seccion-header">Bienvenido al menú de compañia</h1>  
-
-        <button class="btn" id="loginBtn"><a href="/viewVacancies">Ver Vacantes</a></button>
-
-        <button class="btn" id="loginBtn"><a href="/viewVideos">Ver Videos</a></button>
-    
-    {% elif session['role'] == 'applicant' %}
-    
-        <h1  class="seccion-header">Bienvenido al menú de solicitantes</h1>  
-
-        <button class="btn" id="loginBtn"><a href="/viewCompanies">Ver Empresas</a></button>
-
-        <button class="btn" id="loginBtn"><a href="/viewVacancies">Ver Vacantes</a></button>
-
-    {% else %} <!--Contenido para usuarios no registrados-->
+        {% else %} <!--Contenido para usuarios no registrados-->
+    </div>
 
         <section class="nosotros container">
             <div class="nosotros-img">
