@@ -1,0 +1,8 @@
+{% for message in messages %}
+    <div class="message {% if message[6] == 'sent' %}message-sent{% else %}message-received{% endif %}">
+        <p class="message-text">{{ message[3] }}</p>
+        <div class="message-footer">
+            <span class="message-time">{{ message[5] }}</span>
+        </div>
+    </div>
+{% endfor %}

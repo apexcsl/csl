@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, send_file, g, flash
+from flask import Flask, render_template, request, redirect, url_for, session, send_file, g, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from db.database import CDB
 
@@ -6,6 +6,7 @@ import base64
 from config import config
 from mediaUploader import *
 from mfaSender import *
+from datetime import datetime
 
 
 cdb = CDB()
@@ -21,7 +22,7 @@ app.config.from_object('config.DevelopmentConfig')
 app.config['SESSION_TYPE'] = 'filesystem'  
 app.config['SESSION_PERMANENT'] = True     
 app.config['SESSION_USE_SIGNER'] = True    
-app.config['PERMANENT_SESSION_LIFETIME'] = 900  
+app.config['PERMANENT_SESSION_LIFETIME'] = 90000
   
 
 
@@ -48,7 +49,7 @@ def viewAdmins():
 @app.route('/viewCompanies')
 def viewCompanies():
     cur = cdb.cursor
-    cur.execute('SELECT CompanyId, Name, Email, Phone, Address, State, Municipaly, Description, RFC, Logo, Type, uploaded_at FROM companies')
+    cur.execute('SELECT CompanyId, Name, Email, Phone, Address, State, Municipaly, Description, RFC, profilePhoto, Type, uploaded_at FROM companies')
     companies = cur.fetchall()
     return render_template('applicants/viewCompanies.html', companies=companies)
 
@@ -389,17 +390,17 @@ def registerAccessCompanies():
         _municipaly = request.form['municipaly']
         _description = request.form['description']
         _rfc = request.form['rfc']
-        _logo = request.files['logo']
+        _profilePhoto = request.files['profilePhoto']
 
-        type = _logo.mimetype
+        type = _profilePhoto.mimetype
 
-        logo_compr = compressImage(_logo)
+        logo_compr = compressImage(_profilePhoto)
 
     
         cur = cdb.cursor
         if verifyRegisterData(_email, _rfc):
 
-            cur.execute('INSERT INTO companies (name, email, encryptedpasswdc, phone, address, state, municipaly, description, rfc, logo, type) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+            cur.execute('INSERT INTO companies (name, email, encryptedpasswdc, phone, address, state, municipaly, description, rfc, profilePhoto, type) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
                         (_name, _email, generate_password_hash(_pass), _phone, _address, _state, _municipaly, _description, _rfc, logo_compr, type))
             cdb.conection.commit()
 
@@ -644,6 +645,194 @@ def delete_applicant(applicant_id):
     cdb.conection.commit()
     return redirect(url_for('viewApplicants'))
 
+@app.route('/sendNewMessage', methods=['POST', 'GET'])
+def sendNewMessage():
+    _sender = session.get('user_name')
+    _recipient = request.form.get('recipient_userName')
+    _message = request.form.get('message')
+    _status = "undelivered"
+    cur = cdb.cursor  
+
+    if not _sender or not _recipient or not _message:
+        return jsonify({'error': 'Todos los campos son obligatorios'}), 400
+
+
+    cur.execute('SELECT COUNT(*) FROM admins WHERE UserName = %s', (_recipient,))
+    recipient_exists = cur.fetchone()[0] > 0
+
+    cur.execute('SELECT COUNT(*) FROM companies WHERE name = %s', (_recipient,))
+    recipient_exists |= cur.fetchone()[0] > 0
+
+    cur.execute('SELECT COUNT(*) FROM applicants WHERE UserName = %s', (_recipient,))
+    recipient_exists |= cur.fetchone()[0] > 0
+
+    if not recipient_exists:
+        return jsonify({'error': 'El usuario destinatario no existe'}), 404
+
+
+    cur.execute('INSERT INTO messages (SenderUserName, RecipientUserName, Message, Status) VALUES (%s, %s, %s, %s)', 
+                (_sender, _recipient, _message, _status))
+    cdb.conection.commit()
+
+
+    sender = request.args.get('sender')
+    messages = []
+    imagen_base64 = None
+    
+    if sender:
+        cur.execute('''SELECT * FROM messages 
+                       WHERE (RecipientUserName = %s AND SenderUserName = %s) 
+                          OR (RecipientUserName = %s AND SenderUserName = %s) 
+                       ORDER BY uploaded_at''',
+                    (session.get('user_name'), sender, sender, session.get('user_name')))
+        messages = cur.fetchall()
+        messages = [(m[0], m[1], m[2], m[3], m[4], m[5].strftime("%I:%M %p"), 'sent' if m[1] == session.get('user_name') else 'received') for m in messages]
+        
+        # Buscar la imagen en Admins
+        cur.execute('SELECT profilePhoto FROM Admins WHERE Username = %s', (sender,))
+        result = cur.fetchone()
+        if not result:
+            # Buscar en Applicants
+            cur.execute('SELECT profilePhoto FROM Applicants WHERE UserName = %s', (sender,))
+            result = cur.fetchone()
+        if not result:
+            # Buscar en Companies
+            cur.execute('SELECT profilePhoto FROM Companies WHERE Name = %s', (sender,))
+            result = cur.fetchone()
+        
+        if result and result[0]:
+            imagen_base64 = base64.b64encode(result[0]).decode('utf-8')
+    cur.execute('SELECT DISTINCT SenderUserName FROM messages WHERE RecipientUserName = %s', (session.get('user_name'),))
+    senders = cur.fetchall()
+    return render_template('chat/viewChat.html', senders=senders, messages=messages, sender=sender, imagen_base64=imagen_base64)
+
+@app.route('/sendMessage', methods=['POST', 'GET'])
+def sendMessage():
+    _sender = session.get('user_name')
+    _recipient = request.form.get('recipient_userName')
+    _message = request.form.get('message')
+    _status = "undelivered"
+    cur = cdb.cursor  
+
+    if not _sender or not _recipient or not _message:
+        return jsonify({'error': 'Todos los campos son obligatorios'}), 400
+
+
+    cur.execute('SELECT COUNT(*) FROM admins WHERE UserName = %s', (_recipient,))
+    recipient_exists = cur.fetchone()[0] > 0
+
+    cur.execute('SELECT COUNT(*) FROM companies WHERE name = %s', (_recipient,))
+    recipient_exists |= cur.fetchone()[0] > 0
+
+    cur.execute('SELECT COUNT(*) FROM applicants WHERE UserName = %s', (_recipient,))
+    recipient_exists |= cur.fetchone()[0] > 0
+
+    if not recipient_exists:
+        return jsonify({'error': 'El usuario destinatario no existe'}), 404
+
+
+    cur.execute('INSERT INTO messages (SenderUserName, RecipientUserName, Message, Status) VALUES (%s, %s, %s, %s)', 
+                (_sender, _recipient, _message, _status))
+    cdb.conection.commit()
+
+
+    cur.execute("SELECT * FROM messages WHERE (SenderUserName = %s AND RecipientUserName = %s) OR (SenderUserName = %s AND RecipientUserName = %s) ORDER BY uploaded_at ASC", 
+                (_sender, _recipient, _recipient, _sender))
+    messages = cur.fetchall()
+
+
+    messages = [
+        (
+            m[0],  # ID
+            m[1],  # SenderUserName
+            m[2],  # RecipientUserName
+            m[3],  # Message
+            m[4],  # Status
+            m[5].strftime("%I:%M %p"), 
+            'sent' if m[1] == _sender else 'received'  
+        )
+        for m in messages
+    ]
+    
+    return jsonify({"messages": render_template("chat/messages_partial.html", messages=messages)})
+
+
+
+
+@app.route('/viewChat', methods=['GET', 'POST'])
+def viewChat():
+    if not session.get('user_name'):
+        return redirect(url_for('login'))
+    
+    cur = cdb.cursor
+    cur.execute('SELECT DISTINCT SenderUserName FROM messages WHERE RecipientUserName = %s', (session.get('user_name'),))
+    senders = cur.fetchall()
+    
+    sender = request.args.get('sender')
+    messages = []
+    imagen_base64 = None
+    
+    if sender:
+        cur.execute('''SELECT * FROM messages 
+                       WHERE (RecipientUserName = %s AND SenderUserName = %s) 
+                          OR (RecipientUserName = %s AND SenderUserName = %s) 
+                       ORDER BY uploaded_at''',
+                    (session.get('user_name'), sender, sender, session.get('user_name')))
+        messages = cur.fetchall()
+        messages = [(m[0], m[1], m[2], m[3], m[4], m[5].strftime("%I:%M %p"), 'sent' if m[1] == session.get('user_name') else 'received') for m in messages]
+        
+        # Buscar la imagen en Admins
+        cur.execute('SELECT profilePhoto FROM Admins WHERE Username = %s', (sender,))
+        result = cur.fetchone()
+        if not result:
+            # Buscar en Applicants
+            cur.execute('SELECT profilePhoto FROM Applicants WHERE UserName = %s', (sender,))
+            result = cur.fetchone()
+        if not result:
+            # Buscar en Companies
+            cur.execute('SELECT profilePhoto FROM Companies WHERE Name = %s', (sender,))
+            result = cur.fetchone()
+        
+        if result and result[0]:
+            imagen_base64 = base64.b64encode(result[0]).decode('utf-8')
+
+    return render_template('chat/viewChat.html', senders=senders, messages=messages, sender=sender, imagen_base64=imagen_base64)
+
+
+@app.route('/chat', methods=['GET'])
+def chat():
+    if not session.get('user_name'):
+        return redirect(url_for('login'))
+    
+    cur = cdb.cursor
+    cur.execute('SELECT * FROM messages WHERE RecipientUserName = %s OR SenderUserName = %s', (session.get('user_name'), session.get('user_name')))
+    messages = cur.fetchall()
+    
+    imagenes_base64 = {}
+    unique_users = set()
+    
+    for message in messages:
+        unique_users.add(message[1])  # SenderUserName
+        unique_users.add(message[2])  # RecipientUserName
+    
+    for user in unique_users:
+        cur.execute('SELECT profilePhoto FROM Admins WHERE Username = %s', (user,))
+        result = cur.fetchone()
+        if not result:
+            cur.execute('SELECT profilePhoto FROM Applicants WHERE UserName = %s', (user,))
+            result = cur.fetchone()
+        if not result:
+            cur.execute('SELECT profilePhoto FROM Companies WHERE Name = %s', (user,))
+            result = cur.fetchone()
+        
+        if result and result[0]:
+            imagenes_base64[user] = base64.b64encode(result[0]).decode('utf-8')
+    
+    return render_template('chat/chat.html', messages=messages, imagenes_base64=imagenes_base64)
+
+@app.route('/newChat')
+def newChat():
+    return render_template('chat/newChat.html')
 
 
 if __name__ == '__main__':
