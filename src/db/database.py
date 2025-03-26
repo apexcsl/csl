@@ -167,7 +167,6 @@ class CDB():
             self.createTableVideos()
             self.createTableMessages()
             self.createTableApproved()
-            self.createTableRedirections()
             self.insertUser('AdminP', 'admin@gmail.com', 'B!1w8NAt1T^%kvhUI*S^')
             datos = [
                 ('Fisica o Motora', 'Parálisis', 'Pérdida completa o parcial de la capacidad de movimiento de una o más partes del cuerpo debido a daño en el sistema nervioso o muscular.'),
