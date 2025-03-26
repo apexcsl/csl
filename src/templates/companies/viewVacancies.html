@@ -3,43 +3,81 @@
 <table>
   <thead>
     <tr>
-      <th>ID</th>
+      {% if session['role'] == 'superadmin' or session['role'] == 'admin' %}
+        <th>ID</th>
+      {% endif %}
+      {% if session['role'] == 'superadmin' or session['role'] == 'admin' or session['role'] == 'applicant' %}
+        <th>Compañia</th>
+      {% endif %}
       <th>Nombre</th>
       <th>Descripción</th>
       <th>Salario</th>
-      <th>Acciones</th>
+      <th>Discapacidad</th>
+      <th colspan="3">Acciones</th>
     </tr>
   </thead>
   <tbody>
     {% for vacancy in vacancies %}
-    {% if session['role'] == 'superadmin' or session['role'] == 'admin' %}
-    <tr>
-      <td>{{ vacancy[0] }}</td>
-      <td>{{ vacancy[1] }}</td>
-      <td>{{ vacancy[2] }}</td>
-      <td>{{ vacancy[3] }}</td>
-      <td>
-        <a href="{{ url_for('details_vacancy', vacancy_id=vacancy[0]) }}">Detalles</a>
-        <a href="{{ url_for('editVacancyForm', vacancy_id=vacancy[0]) }}">Editar</a>
-        <a href="{{ url_for('delete_vacancy', vacancy_id=vacancy[0]) }}">Borrar</a>
-      </td>
-    </tr>
-    {% elif {{g.user}} == vacancy[1] %}
-    <tr>
-      <td>{{ vacancy[0] }}</td>
-      <td>{{ vacancy[1] }}</td>
-      <td>{{ vacancy[2] }}</td>
-      <td>{{ vacancy[3] }}</td>
-      <td>
-        <a href="{{ url_for('details_vacancy', vacancy_id=vacancy[0]) }}">Detalles</a>
-        <a href="{{ url_for('editVacancyForm', vacancy_id=vacancy[0]) }}">Editar</a>
-        <a href="{{ url_for('delete_vacancy', vacancy_id=vacancy[0]) }}">Borrar</a>
-      </td>
-    </tr>
-    {% endif %}
+      {% if session['role'] == 'superadmin' or session['role'] == 'admin' %}
+        <tr>
+          <td>{{ vacancy[0] }}</td>
+          {% for company in companies %}
+            {% if company[0] == vacancy[1] %}
+              <td>{{ company[1] }}</td>
+            {% endif %}
+          {% endfor %}
+          <td>{{ vacancy[4] }}</td>
+          <td>{{ vacancy[5] }}</td>
+          <td>{{ vacancy[6] }}</td>
+          {% for disability in disabilities %}
+            {% if disability[0] == vacancy[2] %}
+              <td>{{ disability[1] }}</td>
+            {% endif %}
+          {% endfor %}
+          
+          
+          <td>
+            <a href="{{ url_for('details_vacancies', vacancy_id=vacancy[0]) }}">Detalles</a>
+            <a href="{{ url_for('editVacantForm', vacancy_id=vacancy[0]) }}">Editar</a>
+            <a href="{{ url_for('delete_vacancy', vacancy_id=vacancy[0]) }}">Borrar</a>
+          </td>
+        </tr>
+      {% elif session['role'] == 'company' %}
+        <tr>
+          <td>{{ vacancy[4] }}</td>
+          <td>{{ vacancy[5] }}</td>
+          <td>{{ vacancy[6] }}</td>
+          <td>{{ disabilities[2] }}</td>
+          <td>
+            <a href="{{ url_for('details_vacancies', vacancy_id=vacancy[0]) }}">Detalles</a>
+            <a href="{{ url_for('editVacantForm', vacancy_id=vacancy[0]) }}">Editar</a>
+            <a href="{{ url_for('delete_vacancy', vacancy_id=vacancy[0]) }}">Borrar</a>
+          </td>
+        </tr>
+      {%else%}
+        <tr>
+          {% for company in companies %}
+            {% if company[0] == vacancy[1] %}
+              <td>{{ company[1] }}</td>
+            {% endif %}
+          {% endfor %}
+          <td>{{ vacancy[4] }}</td>
+          <td>{{ vacancy[5] }}</td>
+          <td>{{ vacancy[6] }}</td>
+          {% for disability in disabilities %}
+            {% if disability[0] == vacancy[2] %}
+              <td>{{ disability[1] }}</td>
+            {% endif %}
+          {% endfor %}
+          <td>
+            <a href="{{ url_for('details_vacancies', vacancy_id=vacancy[0]) }}">Detalles</a>
+          </td>
+        </tr>
+      {% endif %}
     {% endfor %}
   </tbody>
 </table>
 <a href="{{ url_for('createVacancy') }}">Agregar Vacante</a>
+<br>
 <a href="{{ url_for('home') }}">Regresar a Inicio</a>
 {% endblock %}

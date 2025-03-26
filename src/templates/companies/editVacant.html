@@ -1,6 +1,6 @@
 {% extends "index.html" %} {% block content %}
 <h2>Editar Vacante</h2>
-<form method="post" action="/edit_vacant/{{ vacancy[0] }}" enctype="multipart/form-data">
+<form method="post" action="/edit_vacancy/{{ vacancy[0] }}" enctype="multipart/form-data">
 
   <table>
     {%if session['role'] == 'superadmin' or session['role'] == 'admin' %}
@@ -11,15 +11,15 @@
     {% endif %}
     <tr>
       <th>Nombre</th>
-      <td><input type="text" name="name" value="{{ vacancy[1] }}"></td>
+      <td><input type="text" name="name" value="{{ vacancy[4] }}"></td>
     </tr>
     <tr>
       <th>Descripción</th>
-      <td><textarea name="description" value="{{ vacancy[2]" }}></textarea></td>
+      <td><textarea name="description" value="{{ vacancy[5] }}"></textarea></td>
     </tr>
     <tr>
       <th>Salario</th>
-      <td><input type="text" name="salary" value="{{ vacancy[3] }}"></td>
+      <td><input type="text" name="salary" value="{{ vacancy[6] }}"></td>
     </tr>
     <tr>
       <th>Empresa</th>
@@ -37,15 +37,15 @@
     </tr>
     <tr>
       <th>Estado</th>
-      <td><input type="text" name="state" value="{{ vacancy[5] }}"></td>
+      <td><input type="text" name="state" value="{{ vacancy[7] }}"></td>
     </tr>
     <tr>
       <th>Municipio</th>
-      <td><input type="text" name="municipaly" value="{{ vacancy[6] }}"></td>
+      <td><input type="text" name="municipality" value="{{ vacancy[8] }}"></td>
     </tr>
     <tr>
       <th>Numero de vacantes</th>
-      <td><input type="number" name="numbervacancy" value="{{ vacancy[7] }}"></td>
+      <td><input type="number" name="numberp" value="{{ vacancy[9] }}"></td>
     </tr>
     <tr>
       <th>Discapacidad</th>

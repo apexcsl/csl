@@ -1,7 +1,7 @@
 {%extends "index.html"%} {%block content%}
 <h2>Agregar Vacante</h2>
 
-<form method="post" action="/createVacancy" enctype="multipart/form-data">
+<form method="post" action="/createVacancyProcess" enctype="multipart/form-data">
   {% if mensaje1 %} 
   {{mensaje1}}
   {% endif %}
@@ -38,7 +38,7 @@
     </tr>
     <tr>
       <th>Municipio</th>
-      <td><input type="text" name="municipaly"></td>
+      <td><input type="text" name="municipality" id="municipality"></td>
     </tr>
     <tr>
       <th>Numero de vacantes</th>
@@ -47,16 +47,19 @@
     <tr>
       <th>Discapacidad</th>
       <td>
-        <select name="disability_id">
+        <select name="disability" id="disability" class="input-field">
+          <option value="">-- Seleccionar discapacidad --</option>
           {% for disability in disabilities %}
-          <option value="{{ disability[0] }}">{{ disability[1] }}</option>
+          <option value="{{disability[0]}}">{{disability[1]}}</option>
           {% endfor %}
         </select>
       </td>
     </tr>
   </table>
   <button type="submit">Agregar Vacante</button>
-  <a href="{{ url_for('viewVacancies') }}">Regresar a Vacantes</a>
-  <a href="{{ url_for('home') }}">Regresar a Inicio</a>
-</form>
+
+</form>  
+<a href="{{ url_for('viewVacancies') }}">Regresar a Vacantes</a>
+<br>
+<a href="{{ url_for('home') }}">Regresar a Inicio</a>
 {%endblock%}
