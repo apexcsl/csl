@@ -1,5 +1,7 @@
 {% extends "index.html" %} {% block content %}
 
+<link rel="stylesheet" href="/static/css/tables.css">
+
 <h2>Vacantes</h2>
 <table>
   <thead>
@@ -80,7 +82,7 @@
     {% endfor %}
   </tbody>
 </table>
-{% if session['role'] == 'superadmin' or session['role'] == 'admin' %}
+{% if session['role'] == 'superadmin' or session['role'] == 'admin' or session['role'] == 'company' %}
 <a href="{{ url_for('createVacancy') }}">Agregar Vacante</a>
 {% endif %}
 <br>
