@@ -23,25 +23,18 @@
     {% endfor %}
 
     {% for chat_key, message in latest_messages.items() %}
+      {% set chat_partner = message[2] if g.user == message[1] else message[1] %}
       <li class="chat-item">
-        <a href="/viewChat?sender={% if g.user == message[1] %}{{ message[2] }}{% else %}{{ message[1] }}{% endif %}" class="chat-link">
+        <a href="/viewChat?sender={{ chat_partner }}" class="chat-link">
           <div class="chat-avatar">
-            {% if imagenes_base64.get(message[1]) %}
-              <img src="data:image/png;base64,{{ imagenes_base64[message[1]] }}" alt="User Avatar" style="width: 3rem; height: 3rem;">
-            {% elif imagenes_base64.get(message[2]) %}
-              <img src="data:image/png;base64,{{ imagenes_base64[message[2]] }}" alt="User Avatar" style="width: 3rem; height: 3rem;">
+            {% if imagenes_base64.get(chat_partner) %}
+              <img src="data:image/png;base64,{{ imagenes_base64[chat_partner] }}" alt="User Avatar" style="width: 3rem; height: 3rem;">
             {% else %}
               <img src="/static/images/avatar1.png" alt="User Avatar">
             {% endif %}
           </div>
           <div class="chat-info">
-            <h3 class="chat-name">
-              {% if g.user == message[1] %}
-                {{ message[2] }}
-              {% else %}
-                {{ message[1] }}
-              {% endif %}
-            </h3>
+            <h3 class="chat-name">{{ chat_partner }}</h3>
             <p class="chat-last-message">
               {% if g.user == message[1] %}
                 Tú:
