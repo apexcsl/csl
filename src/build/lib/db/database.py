@@ -65,7 +65,7 @@ class CDB():
             print("\nTabla creada con éxito")
         except pymysql.Error as err:
             print(f"\nError al crear la tabla user: {err}")
-    
+     
     # Funcion para crear la tabla Applicants
     def createTableApplicants(self):
         try:
@@ -77,7 +77,7 @@ class CDB():
     # Funcion para crear la tabla Companies
     def createTableCompanies(self):
         try:
-            self.cursor.execute("CREATE TABLE IF NOT EXISTS Companies (CompanyID INT AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255), Email VARCHAR(255), EncryptedPasswdC VARCHAR(255), Phone VARCHAR(255), Address VARCHAR(255), State VARCHAR(255), Municipaly VARCHAR(255), Description VARCHAR(255), RFC VARCHAR(255), Logo LONGBLOB, Type VARCHAR(50), uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS Companies (CompanyID INT AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255), Email VARCHAR(255), EncryptedPasswdC VARCHAR(255), Phone VARCHAR(255), Address VARCHAR(255), State VARCHAR(255), Municipaly VARCHAR(255), Description VARCHAR(255), RFC VARCHAR(255), profilePhoto LONGBLOB, Type VARCHAR(50), uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
             print("\nTabla creada con éxito")
         except pymysql.Error as err:
             print(f"\nError al crear la tabla user: {err}")
@@ -93,7 +93,7 @@ class CDB():
     #Funcion para crear la tabla Vacantes
     def createTableVacancies(self):
         try:
-            self.cursor.execute("CREATE TABLE IF NOT EXISTS Vacancies (VacancyID INT AUTO_INCREMENT PRIMARY KEY, CompanyID INT, DisavilityID INT, ApplicantID INT, Name VARCHAR(255), Description VARCHAR(255), Salary VARCHAR(255), State VARCHAR(255), Municipaly VARCHAR(255), Type VARCHAR(255), uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS Vacancies (VacancyID INT AUTO_INCREMENT PRIMARY KEY, CompanyID INT, DisabilityID INT, ApplicantID INT, Workposition VARCHAR(255), Description VARCHAR(255), Salary VARCHAR(255), State VARCHAR(255), Municipaly VARCHAR(255), NumberPosition INT, Type VARCHAR(255), uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
             print("\nTabla creada con éxito")
         except pymysql.Error as err:
             print(f"\nError al crear la tabla user: {err}")
@@ -109,7 +109,7 @@ class CDB():
     # Funcion para crear la tabla Messages
     def createTableMessages(self):
         try:
-            self.cursor.execute("CREATE TABLE IF NOT EXISTS Messages (MessageID INT AUTO_INCREMENT PRIMARY KEY, SenderID INT, RecipientID INT, Message TEXT, Status VARCHAR(255), uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS Messages (MessageID INT AUTO_INCREMENT PRIMARY KEY, SenderUserName VARCHAR(255), RecipientUserName VARCHAR(255), Message TEXT, Status VARCHAR(255), uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
             print("\nTabla mensajes creada con éxito")
         except pymysql.Error as err:
             print(f"\nError al crear la tabla user: {err}")
@@ -122,18 +122,15 @@ class CDB():
             print("\nTabla creada con éxito")
         except pymysql.Error as err:
             print(f"\nError al crear la tabla user: {err}")
-    # Funcion para insertar un usuario predeterminado
-    def insertUser(self, username, email, password):
+
+    #Función para crear la tabla Aplications
+    def createTableApplications(self):
         try:
-            self.cursor.execute("SELECT COUNT(*) FROM Admins WHERE Username = %s AND Email = %s", (username, email))
-            if self.cursor.fetchone()[0] == 0:
-                self.cursor.execute("INSERT INTO Admins (Username, Email, EncryptedPassword) VALUES (%s, %s, %s)", (username, email, password))
-                self.conection.commit()
-                print("Usuario insertado con éxito")
-            else:
-                print("El usuario ya existe")
+            self.cursor.execute("CREATE TABLE IF NOT EXISTS Applications (AppID Int AUTO_INCREMENT PRIMARY KEY, VacancyID INT, ApplicantID INT, uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+            print("\nTabla Applications creada con éxito")
         except pymysql.Error as err:
-            print(f"\nError al insertar el usuario: {err}")
+            print(f"\nError al crear la tabla Applications: {err}")
+
 
     #Funcion para insertar discapacidades
     def insertDisability(self, category, name, description):
@@ -159,7 +156,7 @@ class CDB():
             self.createTableVideos()
             self.createTableMessages()
             self.createTableApproved()
-            self.insertUser('AdminP', 'admin@gmail.com', 'B!1w8NAt1T^%kvhUI*S^')
+            self.createTableApplications()
             datos = [
                 ('Fisica o Motora', 'Parálisis', 'Pérdida completa o parcial de la capacidad de movimiento de una o más partes del cuerpo debido a daño en el sistema nervioso o muscular.'),
                 ('Fisica o Motora', 'Amputaciones', 'Pérdida de una extremidad o parte del cuerpo, que afecta la movilidad y el uso de prótesis o adaptaciones.'),

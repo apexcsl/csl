@@ -3,8 +3,8 @@ class Config:
     MAIL_SERVER = 'smtp.gmail.com' 
     MAIL_PORT = 465
     MAIL_USE_SSL = True
-    MAIL_USERNAME = 'apexcsl155@gmail.com'
-    MAIL_PASSWORD = 'hcjb bnvm peib tguj'
+    MAIL_USERNAME = 'apexagstech@gmail.com'
+    MAIL_PASSWORD = 'mpbi ldyx rayy wohp'
 
 
 class DevelopmentConfig(Config):
